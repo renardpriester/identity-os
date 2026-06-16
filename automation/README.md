@@ -15,6 +15,7 @@ IdentityOS automation is designed to show how identity operations can move from 
 | Script                                     | Purpose                                                                                                     |
 | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
 | [policy-evaluator.py](policy-evaluator.py) | Reads sample identity events and sample policy decisions, then prints a readable policy evaluation summary. |
+| [generate-governance-report.py](generate-governance-report.py) | Reads sample identity events and policy decisions, then generates a Markdown governance report. |
 
 ---
 
@@ -39,6 +40,56 @@ Evaluation Metrics
 ```
 
 ---
+
+## Governance Report Generator
+
+The `generate-governance-report.py` script creates a Markdown governance report from the sample IdentityOS data.
+
+It demonstrates the following pattern:
+
+```text id="dpuzsn"
+Identity Events
+      ↓
+Policy Decisions
+      ↓
+Governance Summary
+      ↓
+Risk Distribution
+      ↓
+Access Remediation Summary
+      ↓
+Detailed Audit Evidence
+      ↓
+Markdown Report
+```
+
+The script reads:
+
+```text id="z22c2d"
+examples/sample-identity-events.json
+examples/sample-policy-decisions.json
+```
+
+And generates:
+
+```text id="q578j8"
+reports/sample-governance-report.md
+```
+
+Run the script from the project root:
+
+```powershell id="1yfjuq"
+python automation/generate-governance-report.py
+```
+
+Or, if using the Windows Python launcher:
+
+```powershell id="gnun3y"
+py automation/generate-governance-report.py
+```
+
+This report helps demonstrate how IdentityOS can turn identity decisions into governance visibility, audit evidence, and risk reporting.
+
 
 ## Input Files
 
