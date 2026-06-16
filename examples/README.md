@@ -14,6 +14,7 @@ The example files are not connected to real users or real organizations. They ar
 | ------------------------------------------------------------ | --------------------------------------------------------------- |
 | [sample-identity-events.json](sample-identity-events.json)   | Contains sample identity lifecycle and governance events.       |
 | [sample-policy-decisions.json](sample-policy-decisions.json) | Contains sample policy decisions linked to the identity events. |
+| [sample-dashboard-metrics.json](sample-dashboard-metrics.json) | Contains sample dashboard metrics for executive identity risk, lifecycle operations, governance, risk scoring, access drift, and automation health. |
 
 ---
 
@@ -57,6 +58,24 @@ A policy decision may include:
 * Audit reason
 
 ---
+
+## Sample Dashboard Metrics
+
+The `sample-dashboard-metrics.json` file contains sample metrics used to demonstrate IdentityOS dashboard concepts.
+
+The dataset includes metrics for:
+
+* Executive identity risk
+* Lifecycle operations
+* Governance
+* Risk scoring
+* Access drift
+* Automation health
+
+These metrics help demonstrate how IdentityOS can turn identity activity, policy decisions, risk scoring, access drift detection, and generated reports into dashboard-ready visibility.
+
+The sample dashboard metrics support the v0.4 dashboard concept layer.
+
 
 ## Example Event-to-Decision Pattern
 
