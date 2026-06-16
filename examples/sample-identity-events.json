@@ -1,0 +1,211 @@
+{
+  "dataset": "IdentityOS Sample Identity Events",
+  "version": "0.1",
+  "description": "Sample identity lifecycle events used to demonstrate how IdentityOS processes Joiner, Mover, Leaver, contractor, privileged access, and non-human identity scenarios.",
+  "events": [
+    {
+      "event_id": "EVT-JOINER-0001",
+      "event_type": "Joiner",
+      "source_system": "HRIS",
+      "timestamp": "2026-06-16T09:00:00Z",
+      "identity": {
+        "employee_id": "E10001",
+        "first_name": "Jordan",
+        "last_name": "Smith",
+        "user_principal_name": "jordan.smith@atlaslegal.example",
+        "worker_type": "Employee",
+        "employment_status": "Active",
+        "department": "Legal",
+        "job_title": "Legal Associate",
+        "manager": "Taylor Brooks",
+        "location": "Miami",
+        "business_unit": "Litigation",
+        "start_date": "2026-06-24"
+      },
+      "requested_outcome": {
+        "action": "Create identity and assign baseline role package",
+        "role_package": "Legal Associate",
+        "requires_approval": false,
+        "requires_mfa": true,
+        "requires_conditional_access": true,
+        "audit_required": true
+      }
+    },
+    {
+      "event_id": "EVT-MOVER-0001",
+      "event_type": "Mover",
+      "source_system": "HRIS",
+      "timestamp": "2026-06-16T10:30:00Z",
+      "identity": {
+        "employee_id": "E10002",
+        "first_name": "Morgan",
+        "last_name": "Lee",
+        "user_principal_name": "morgan.lee@atlaslegal.example",
+        "worker_type": "Employee",
+        "employment_status": "Active",
+        "previous_department": "Finance",
+        "new_department": "Legal",
+        "previous_job_title": "Finance Analyst",
+        "new_job_title": "Legal Operations Analyst",
+        "previous_manager": "Avery Johnson",
+        "new_manager": "Taylor Brooks",
+        "location": "New York",
+        "effective_date": "2026-06-20"
+      },
+      "requested_outcome": {
+        "action": "Evaluate role change and adjust access",
+        "remove_access": [
+          "Finance SharePoint",
+          "Financial Reporting Portal"
+        ],
+        "grant_access": [
+          "Legal Operations Workspace",
+          "Legal Document Management System"
+        ],
+        "requires_manager_review": true,
+        "audit_required": true
+      }
+    },
+    {
+      "event_id": "EVT-LEAVER-0001",
+      "event_type": "Leaver",
+      "source_system": "HRIS",
+      "timestamp": "2026-06-16T14:00:00Z",
+      "identity": {
+        "employee_id": "E10003",
+        "first_name": "Alex",
+        "last_name": "Morgan",
+        "user_principal_name": "alex.morgan@atlaslegal.example",
+        "worker_type": "Employee",
+        "employment_status": "Terminated",
+        "department": "Information Technology",
+        "job_title": "IT Support Engineer",
+        "manager": "Riley Carter",
+        "location": "Atlanta",
+        "termination_type": "Scheduled",
+        "termination_date": "2026-06-16",
+        "privileged_access": true
+      },
+      "requested_outcome": {
+        "action": "Disable identity and remove all access",
+        "disable_account": true,
+        "revoke_sessions": true,
+        "remove_groups": true,
+        "remove_privileged_roles": true,
+        "deprovision_applications": true,
+        "notify_manager": true,
+        "notify_security": true,
+        "audit_required": true
+      }
+    },
+    {
+      "event_id": "EVT-CONTRACTOR-0001",
+      "event_type": "Contractor_Onboarding",
+      "source_system": "ServiceNow",
+      "timestamp": "2026-06-17T08:45:00Z",
+      "identity": {
+        "contractor_id": "C20001",
+        "first_name": "Riley",
+        "last_name": "Carter",
+        "user_principal_name": "riley.carter.contractor@atlaslegal.example",
+        "worker_type": "Contractor",
+        "employment_status": "Pending",
+        "department": "Legal Operations",
+        "job_title": "Contract Project Analyst",
+        "sponsor": "Taylor Brooks",
+        "location": "Remote",
+        "start_date": "2026-06-24",
+        "end_date": "2026-08-31"
+      },
+      "requested_outcome": {
+        "action": "Create contractor identity with expiration",
+        "role_package": "Contractor",
+        "requires_sponsor_approval": true,
+        "requires_mfa": true,
+        "expiration_required": true,
+        "review_frequency": "Monthly",
+        "audit_required": true
+      }
+    },
+    {
+      "event_id": "EVT-CONTRACTOR-EXP-0001",
+      "event_type": "Contractor_Expiration",
+      "source_system": "IdentityOS",
+      "timestamp": "2026-08-24T09:00:00Z",
+      "identity": {
+        "contractor_id": "C20001",
+        "first_name": "Riley",
+        "last_name": "Carter",
+        "user_principal_name": "riley.carter.contractor@atlaslegal.example",
+        "worker_type": "Contractor",
+        "employment_status": "Active",
+        "department": "Legal Operations",
+        "sponsor": "Taylor Brooks",
+        "end_date": "2026-08-31"
+      },
+      "requested_outcome": {
+        "action": "Trigger contractor renewal review",
+        "notify_sponsor": true,
+        "renewal_required": true,
+        "auto_disable_if_not_renewed": true,
+        "audit_required": true
+      }
+    },
+    {
+      "event_id": "EVT-PAM-0001",
+      "event_type": "Privileged_Access_Request",
+      "source_system": "Privileged Access Management",
+      "timestamp": "2026-06-18T11:15:00Z",
+      "identity": {
+        "employee_id": "E10004",
+        "first_name": "Casey",
+        "last_name": "Nguyen",
+        "user_principal_name": "casey.nguyen@atlaslegal.example",
+        "worker_type": "Employee",
+        "employment_status": "Active",
+        "department": "Security",
+        "job_title": "Security Analyst",
+        "manager": "Riley Carter"
+      },
+      "requested_outcome": {
+        "action": "Evaluate privileged access activation",
+        "requested_role": "Security Reader",
+        "access_type": "Privileged",
+        "assignment_type": "Eligible",
+        "duration": "2 hours",
+        "requires_mfa": true,
+        "requires_justification": true,
+        "requires_approval": true,
+        "audit_required": true
+      }
+    },
+    {
+      "event_id": "EVT-NHI-0001",
+      "event_type": "Non_Human_Identity_Review",
+      "source_system": "IdentityOS",
+      "timestamp": "2026-06-19T13:00:00Z",
+      "identity": {
+        "identity_name": "svc-document-sync",
+        "identity_type": "Service Account",
+        "owner": "Legal Technology Team",
+        "purpose": "Synchronizes legal documents between the document management platform and archive storage.",
+        "access_scope": [
+          "Document Management API",
+          "Legal Archive Storage"
+        ],
+        "risk_level": "High",
+        "credential_rotation_required": true,
+        "last_rotation_date": "2026-05-01",
+        "review_frequency": "Quarterly"
+      },
+      "requested_outcome": {
+        "action": "Review non-human identity ownership and access scope",
+        "verify_owner": true,
+        "verify_business_purpose": true,
+        "verify_access_scope": true,
+        "verify_credential_rotation": true,
+        "audit_required": true
+      }
+    }
+  ]
+}
