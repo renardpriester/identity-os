@@ -16,6 +16,7 @@ These models help explain how IdentityOS translates business context into access
 | --------------------------------------------- | ------------------------------------------------------------------------------------ |
 | [Role Catalog](role-catalog.md)               | Defines sample enterprise role packages and access patterns.                         |
 | [Access Review Model](access-review-model.md) | Defines how access should be reviewed, certified, remediated, and audited over time. |
+| [Risk Scoring Model](risk-scoring-model.md) | Defines how IdentityOS calculates identity risk using lifecycle state, access sensitivity, governance status, privilege, ownership, exceptions, and access drift. |
 
 ---
 
