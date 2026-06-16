@@ -109,6 +109,7 @@ IdentityOS is organized into architecture documents, reference models, sample da
 | [Policy Engine](docs/policy-engine.md)           | Explains how IdentityOS evaluates identity attributes and produces access decisions.                |
 | [Governance](docs/governance.md)                 | Defines the governance model for access reviews, exceptions, privileged access, and audit evidence. |
 | [Roadmap](docs/roadmap.md)                       | Outlines the phased development plan for IdentityOS.                                                |
+| [Dashboard Concepts](docs/dashboard-concepts.md) | Defines executive, IAM operations, governance, risk, access drift, privileged access, contractor/vendor, non-human identity, and automation dashboard concepts. |
 
 ### Visual Diagrams
 
