@@ -4,6 +4,58 @@ All notable changes to IdentityOS will be documented in this file.
 
 ---
 
+## v0.2.0 - Visual Architecture and Reporting Expansion
+
+### Added
+
+* Added high-level IdentityOS architecture diagram.
+* Added Joiner workflow diagram.
+* Added Mover workflow diagram.
+* Added Leaver workflow diagram.
+* Added Policy Engine decision flow diagram.
+* Added Governance workflow diagram.
+* Added Access Review cycle diagram.
+* Added diagrams index.
+* Added documentation index.
+* Added reference models index.
+* Added examples index.
+* Added automation index updates.
+* Added reports folder and reports index.
+* Added IdentityOS project summary.
+* Added sample governance report generator script.
+* Added generated sample governance report.
+* Updated README with Quick Links.
+* Updated README with visual diagram links.
+* Updated README with reports links.
+
+### Project State
+
+IdentityOS v0.2.0 expands the project from an architecture foundation into a more complete identity architecture portfolio project.
+
+This version adds visual architecture models, lifecycle workflow diagrams, governance diagrams, folder-level navigation, a project summary, and a generated governance report capability.
+
+### Current Capabilities
+
+* Provides a complete project navigation experience.
+* Shows IdentityOS architecture visually.
+* Models Joiner, Mover, and Leaver workflows.
+* Models Policy Engine decision logic.
+* Models governance and access review workflows.
+* Documents all major project folders.
+* Generates a Markdown governance report from sample data.
+* Demonstrates how identity decisions can become governance evidence.
+
+### Next Planned Work
+
+* Add additional automation scripts.
+* Add risk scoring logic.
+* Add access drift detection examples.
+* Add exception detection examples.
+* Add dashboard concepts.
+* Add Microsoft Entra ID integration examples.
+* Add expanded reporting outputs.
+
+
 ## v0.1.0 - IdentityOS Architecture Foundation
 
 ### Added
