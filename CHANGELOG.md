@@ -4,6 +4,51 @@ All notable changes to IdentityOS will be documented in this file.
 
 ---
 
+## v0.4.0 - Identity Analytics and Dashboard Concepts
+
+### Added
+
+* Added IdentityOS Dashboard Concepts documentation.
+* Added sample dashboard metrics dataset.
+* Added sample dashboard summary generator script.
+* Added generated sample dashboard summary report.
+* Updated documentation README with dashboard concepts.
+* Updated examples README with dashboard metrics.
+* Updated automation README with dashboard summary generator.
+* Updated reports README with dashboard summary report.
+* Updated main README with dashboard concepts link.
+* Updated main README with dashboard metrics, automation, and report links.
+
+### Project State
+
+IdentityOS v0.4.0 expands the project into identity analytics and dashboard-ready reporting.
+
+This version shows how identity lifecycle activity, governance outcomes, risk scoring, access drift detection, automation health, and reporting outputs can be presented as dashboard metrics for different audiences.
+
+### Current Capabilities
+
+* Defines dashboard concepts for executives, IAM teams, security teams, auditors, application owners, managers, HR, and business operations.
+* Provides sample dashboard metrics for executive identity risk, lifecycle operations, governance, risk scoring, access drift, and automation health.
+* Generates a Markdown dashboard summary report from sample metrics.
+* Connects dashboard concepts, sample data, automation, and reports through README navigation.
+
+### Why This Matters
+
+Identity systems need visibility.
+
+IdentityOS v0.4.0 shows how identity events, access decisions, governance results, risk scoring, and access drift detection can become dashboard-ready information.
+
+This helps translate IAM work into measurable business, security, governance, and audit outcomes.
+
+### Next Planned Work
+
+* Add Microsoft Entra ID integration concepts.
+* Add Microsoft Graph action mapping.
+* Add Entra ID Joiner, Mover, and Leaver flow examples.
+* Add sample Graph PowerShell scripts.
+* Add integration documentation for identity providers and governance platforms.
+
+
 ## v0.3.0 - Risk Scoring and Access Drift Detection
 
 ### Added
