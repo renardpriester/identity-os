@@ -20,6 +20,7 @@ The documents explain the vision, mission, principles, system architecture, life
 | [Policy Engine](policy-engine.md)           | Explains how IdentityOS evaluates identity attributes, business context, and governance rules to produce access decisions. |
 | [Governance](governance.md)                 | Defines how IdentityOS manages access reviews, approvals, exceptions, privileged access, remediation, and audit evidence.  |
 | [Roadmap](roadmap.md)                       | Outlines the phased development plan for IdentityOS.                                                                       |
+| [Dashboard Concepts](dashboard-concepts.md) | Defines executive, IAM operations, governance, risk, access drift, privileged access, contractor/vendor, non-human identity, and automation dashboard concepts. |
 
 ---
 
@@ -34,7 +35,9 @@ For a complete understanding of the IdentityOS architecture, read the documents 
 5. [Lifecycle Engine](lifecycle-engine.md)
 6. [Policy Engine](policy-engine.md)
 7. [Governance](governance.md)
-8. [Roadmap](roadmap.md)
+8. [Dashboard Concepts](dashboard-concepts.md)
+9. [Roadmap](roadmap.md)
+
 
 This order moves from strategic purpose to system design, operational engines, governance, and future development.
 
