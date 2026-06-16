@@ -17,6 +17,7 @@ IdentityOS automation is designed to show how identity operations can move from 
 | [policy-evaluator.py](policy-evaluator.py) | Reads sample identity events and sample policy decisions, then prints a readable policy evaluation summary. |
 | [generate-governance-report.py](generate-governance-report.py) | Reads sample identity events and policy decisions, then generates a Markdown governance report. |
 | [risk-scorer.py](risk-scorer.py) | Calculates sample identity risk scores from identity events and policy decisions, then generates a Markdown risk score report. |
+| [access-drift-detector.py](access-drift-detector.py) | Detects sample access drift from identity events and policy decisions, then generates a Markdown access drift report. |
 
 ---
 
@@ -166,6 +167,56 @@ The current prototype includes sample logic for:
 * Non-human identity reviews
 
 ---
+
+## Access Drift Detector
+
+The `access-drift-detector.py` script detects sample access drift using identity events and policy decisions.
+
+It demonstrates the following pattern:
+
+```text id="lmqo27"
+Identity Events
+      ↓
+Policy Decisions
+      ↓
+Expected Access
+      ↓
+Actual Access
+      ↓
+Access Drift Detection
+      ↓
+Recommended Remediation
+      ↓
+Markdown Drift Report
+```
+
+The script reads:
+
+```text id="j08pi4"
+examples/sample-identity-events.json
+examples/sample-policy-decisions.json
+```
+
+And generates:
+
+```text id="q1zwj5"
+reports/sample-access-drift-report.md
+```
+
+Run the script from the project root:
+
+```powershell id="3s4eq1"
+python automation/access-drift-detector.py
+```
+
+Or, if using the Windows Python launcher:
+
+```powershell id="0k2i8b"
+py automation/access-drift-detector.py
+```
+
+The access drift detector helps demonstrate how IdentityOS can identify stale access, privilege creep, department drift, contractor drift, leaver drift, and non-human identity governance risk.
+
 
 ## Run the Script
 
