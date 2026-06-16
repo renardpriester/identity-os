@@ -86,6 +86,20 @@ IdentityOS is organized into architecture documents, reference models, sample da
 | [Governance](docs/governance.md)                 | Defines the governance model for access reviews, exceptions, privileged access, and audit evidence. |
 | [Roadmap](docs/roadmap.md)                       | Outlines the phased development plan for IdentityOS.                                                |
 
+### Visual Diagrams
+
+| Diagram                                                                   | Purpose                                                                                                  |
+| ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [Diagrams Index](diagrams/README.md)                                      | Provides a central index for all IdentityOS visual architecture diagrams.                                |
+| [High-Level Architecture](diagrams/identityos-high-level-architecture.md) | Shows the overall IdentityOS system context, core engines, and identity event pipeline.                  |
+| [Joiner Workflow](diagrams/joiner-workflow.md)                            | Shows how IdentityOS handles onboarding, provisioning, security controls, and audit evidence.            |
+| [Mover Workflow](diagrams/mover-workflow.md)                              | Shows how IdentityOS handles role changes, access realignment, and privilege creep reduction.            |
+| [Leaver Workflow](diagrams/leaver-workflow.md)                            | Shows how IdentityOS handles offboarding, deprovisioning, privileged access removal, and audit evidence. |
+| [Policy Engine Decision Flow](diagrams/policy-engine-decision-flow.md)    | Shows how IdentityOS evaluates identity events and produces access decisions.                            |
+| [Governance Workflow](diagrams/governance-workflow.md)                    | Shows how IdentityOS handles approvals, reviews, exceptions, remediation, and audit evidence.            |
+| [Access Review Cycle](diagrams/access-review-cycle.md)                    | Shows how access reviews are scoped, routed, decided, remediated, evidenced, and improved over time.     |
+
+
 ### Reference Models
 
 | Reference                                               | Purpose                                                                              |
