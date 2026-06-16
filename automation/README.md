@@ -16,6 +16,7 @@ IdentityOS automation is designed to show how identity operations can move from 
 | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
 | [policy-evaluator.py](policy-evaluator.py) | Reads sample identity events and sample policy decisions, then prints a readable policy evaluation summary. |
 | [generate-governance-report.py](generate-governance-report.py) | Reads sample identity events and policy decisions, then generates a Markdown governance report. |
+| [risk-scorer.py](risk-scorer.py) | Calculates sample identity risk scores from identity events and policy decisions, then generates a Markdown risk score report. |
 
 ---
 
@@ -101,6 +102,56 @@ The script uses two sample data files:
 | `examples/sample-policy-decisions.json` | Contains sample policy decisions linked to identity events. |
 
 ---
+
+## Risk Scorer
+
+The `risk-scorer.py` script calculates sample identity risk scores using identity events and policy decisions.
+
+It demonstrates the following pattern:
+
+```text id="9xzxf9"
+Identity Events
+      ↓
+Policy Decisions
+      ↓
+Risk Factor Evaluation
+      ↓
+Risk Score
+      ↓
+Risk Level
+      ↓
+Recommended Governance Action
+      ↓
+Markdown Risk Report
+```
+
+The script reads:
+
+```text id="xhedne"
+examples/sample-identity-events.json
+examples/sample-policy-decisions.json
+```
+
+And generates:
+
+```text id="8na141"
+reports/sample-risk-score-report.md
+```
+
+Run the script from the project root:
+
+```powershell id="g0jn5e"
+python automation/risk-scorer.py
+```
+
+Or, if using the Windows Python launcher:
+
+```powershell id="k9c43u"
+py automation/risk-scorer.py
+```
+
+The risk scorer helps demonstrate how IdentityOS can turn access decisions into measurable identity risk.
+
 
 ## Supported Event Types
 
