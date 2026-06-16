@@ -69,6 +69,58 @@ IdentityOS approaches identity as an enterprise-wide system that must be:
 
 ---
 
+## Project Navigation
+
+IdentityOS is organized into architecture documents, reference models, sample data, and prototype automation.
+
+### Architecture Documents
+
+| Document                                         | Purpose                                                                                             |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| [Vision](docs/vision.md)                         | Explains why IdentityOS exists and what future state it is designed to support.                     |
+| [Mission](docs/mission.md)                       | Defines the practical mission and operating objectives of IdentityOS.                               |
+| [Guiding Principles](docs/guiding-principles.md) | Establishes the architectural principles that guide IdentityOS design decisions.                    |
+| [Architecture](docs/architecture.md)             | Describes the high-level IdentityOS architecture and core engines.                                  |
+| [Lifecycle Engine](docs/lifecycle-engine.md)     | Defines how Joiner, Mover, Leaver, contractor, vendor, and non-human identity events are handled.   |
+| [Policy Engine](docs/policy-engine.md)           | Explains how IdentityOS evaluates identity attributes and produces access decisions.                |
+| [Governance](docs/governance.md)                 | Defines the governance model for access reviews, exceptions, privileged access, and audit evidence. |
+| [Roadmap](docs/roadmap.md)                       | Outlines the phased development plan for IdentityOS.                                                |
+
+### Reference Models
+
+| Reference                                               | Purpose                                                                              |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| [Role Catalog](reference/role-catalog.md)               | Defines sample business roles and role-based access packages.                        |
+| [Access Review Model](reference/access-review-model.md) | Defines how access should be reviewed, certified, remediated, and audited over time. |
+
+### Sample Data
+
+| File                                                             | Purpose                                                                                              |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| [Sample Identity Events](examples/sample-identity-events.json)   | Provides sample Joiner, Mover, Leaver, contractor, privileged access, and non-human identity events. |
+| [Sample Policy Decisions](examples/sample-policy-decisions.json) | Shows how IdentityOS evaluates identity events and produces policy decisions.                        |
+
+### Prototype Automation
+
+| Script                                             | Purpose                                                                                     |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| [Policy Evaluator](automation/policy-evaluator.py) | Reads sample identity events and policy decisions, then prints a policy evaluation summary. |
+
+### Run the Prototype
+
+From the project root, run:
+
+```powershell
+python automation/policy-evaluator.py
+```
+
+Or, if using the Windows Python launcher:
+
+```powershell
+py automation/policy-evaluator.py
+```
+
+
 ## Core Engines
 
 IdentityOS is organized around six core engines.
