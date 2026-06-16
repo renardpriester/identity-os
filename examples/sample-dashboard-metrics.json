@@ -1,0 +1,85 @@
+{
+  "dashboard_name": "IdentityOS Sample Dashboard Metrics",
+  "description": "Sample dashboard metrics used to demonstrate IdentityOS identity analytics, governance visibility, risk scoring, access drift detection, and automation reporting.",
+  "data_classification": "Sample / Fictional",
+  "version": "0.4.0",
+  "metrics": {
+    "executive_identity_risk": {
+      "total_sample_identities": 7,
+      "total_policy_decisions": 7,
+      "pending_approvals": 2,
+      "review_required": 2,
+      "high_risk_decisions": 2,
+      "critical_risk_decisions": 2,
+      "access_drift_detected": 4
+    },
+    "lifecycle_operations": {
+      "joiner_events": 1,
+      "mover_events": 1,
+      "leaver_events": 1,
+      "contractor_onboarding_events": 1,
+      "contractor_expiration_events": 1,
+      "privileged_access_requests": 1,
+      "non_human_identity_reviews": 1
+    },
+    "governance": {
+      "approvals_required": 4,
+      "pending_approvals": 2,
+      "review_required": 2,
+      "monthly_reviews": 3,
+      "quarterly_reviews": 3,
+      "exceptions_tracked": 0,
+      "audit_required_decisions": 7
+    },
+    "risk_scoring": {
+      "risk_reports_generated": 1,
+      "low_risk_identities": 1,
+      "medium_risk_identities": 2,
+      "high_risk_identities": 3,
+      "critical_risk_identities": 1
+    },
+    "access_drift": {
+      "drift_reports_generated": 1,
+      "total_drift_findings": 4,
+      "department_drift": 1,
+      "leaver_drift": 1,
+      "contractor_drift": 1,
+      "non_human_identity_drift": 1,
+      "critical_drift_findings": 2,
+      "high_drift_findings": 2
+    },
+    "automation_health": {
+      "automation_scripts_available": 4,
+      "reports_generated": 3,
+      "automation_failures": 0,
+      "manual_intervention_required": 0
+    }
+  },
+  "dashboard_views": [
+    {
+      "view_name": "Executive Identity Risk",
+      "primary_audience": "Executives and security leadership",
+      "focus": "High-level identity risk, governance health, critical findings, and access drift."
+    },
+    {
+      "view_name": "IAM Operations",
+      "primary_audience": "IAM engineers and identity operations teams",
+      "focus": "Lifecycle events, automation results, pending approvals, and remediation work."
+    },
+    {
+      "view_name": "Governance",
+      "primary_audience": "IAM governance, audit, and compliance teams",
+      "focus": "Access reviews, approvals, audit evidence, review frequency, and remediation."
+    },
+    {
+      "view_name": "Access Drift",
+      "primary_audience": "IAM, security, and application owners",
+      "focus": "Privilege creep, stale access, department drift, leaver drift, contractor drift, and non-human identity drift."
+    },
+    {
+      "view_name": "Automation Health",
+      "primary_audience": "IAM engineers and platform owners",
+      "focus": "Automation scripts, generated reports, failures, and manual intervention."
+    }
+  ]
+}
