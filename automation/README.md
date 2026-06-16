@@ -18,6 +18,7 @@ IdentityOS automation is designed to show how identity operations can move from 
 | [generate-governance-report.py](generate-governance-report.py) | Reads sample identity events and policy decisions, then generates a Markdown governance report. |
 | [risk-scorer.py](risk-scorer.py) | Calculates sample identity risk scores from identity events and policy decisions, then generates a Markdown risk score report. |
 | [access-drift-detector.py](access-drift-detector.py) | Detects sample access drift from identity events and policy decisions, then generates a Markdown access drift report. |
+| [generate-dashboard-summary.py](generate-dashboard-summary.py) | Reads sample dashboard metrics and generates a Markdown dashboard summary report. |
 
 ---
 
@@ -233,6 +234,59 @@ py automation/policy-evaluator.py
 ```
 
 ---
+
+## Dashboard Summary Generator
+
+The `generate-dashboard-summary.py` script creates a Markdown dashboard summary report from sample dashboard metrics.
+
+It demonstrates the following pattern:
+
+```text id="xqyqcc"
+Sample Dashboard Metrics
+      ↓
+Dashboard Summary Generator
+      ↓
+Executive Identity Risk Metrics
+      ↓
+Lifecycle Operations Metrics
+      ↓
+Governance Metrics
+      ↓
+Risk Scoring Metrics
+      ↓
+Access Drift Metrics
+      ↓
+Automation Health Metrics
+      ↓
+Markdown Dashboard Summary
+```
+
+The script reads:
+
+```text id="n0pg7c"
+examples/sample-dashboard-metrics.json
+```
+
+And generates:
+
+```text id="i7lpua"
+reports/sample-dashboard-summary.md
+```
+
+Run the script from the project root:
+
+```powershell id="87w8mm"
+python automation/generate-dashboard-summary.py
+```
+
+Or, if using the Windows Python launcher:
+
+```powershell id="ckimdm"
+py automation/generate-dashboard-summary.py
+```
+
+The dashboard summary generator helps demonstrate how IdentityOS can turn identity activity, governance outcomes, risk scoring, access drift detection, and automation health into dashboard-ready reporting.
+
 
 ## Example Output
 
