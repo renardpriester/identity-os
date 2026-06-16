@@ -80,6 +80,7 @@ IdentityOS approaches identity as an enterprise-wide system that must be:
 | [Examples](examples/README.md)          | Sample identity events and policy decision datasets.                                                                          |
 | [Automation](automation/README.md)      | Prototype automation scripts and execution guidance.                                                                          |
 | [Changelog](CHANGELOG.md)               | Version history and project milestones.                                                                                       |
+| [Reports](reports/README.md) | Generated governance reports that turn IdentityOS sample data into audit and risk visibility. |
 
 
 ## Project Navigation
