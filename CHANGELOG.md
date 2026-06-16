@@ -4,6 +4,54 @@ All notable changes to IdentityOS will be documented in this file.
 
 ---
 
+## v0.3.0 - Risk Scoring and Access Drift Detection
+
+### Added
+
+* Added IdentityOS Risk Scoring Model.
+* Added IdentityOS Access Drift Model.
+* Added sample risk scorer automation script.
+* Added sample access drift detector automation script.
+* Added generated sample risk score report.
+* Added generated sample access drift report.
+* Updated reference models index with risk scoring and access drift models.
+* Updated automation README with risk scorer and access drift detector.
+* Updated reports README with risk score and access drift reports.
+* Updated main README with risk scoring links.
+* Updated main README with access drift links.
+
+### Project State
+
+IdentityOS v0.3.0 expands the project from architecture, governance, and reporting into identity risk intelligence.
+
+This version introduces the ability to calculate sample identity risk scores and detect access drift using identity lifecycle events and policy decisions.
+
+### Current Capabilities
+
+* Calculates identity risk scores from sample identity events and policy decisions.
+* Assigns risk levels such as Low, Medium, High, and Critical.
+* Explains risk factors and recommended governance actions.
+* Detects access drift from lifecycle and policy decision data.
+* Identifies department drift, contractor drift, leaver drift, privileged drift, governance drift, and non-human identity drift.
+* Generates Markdown reports for risk scoring and access drift detection.
+* Connects risk models, automation scripts, and reports through README navigation.
+
+### Why This Matters
+
+Risk scoring and access drift detection help IdentityOS move beyond basic access management.
+
+They show how identity data can be used to identify excessive access, stale access, privilege creep, contractor risk, privileged access risk, leaver risk, and non-human identity governance gaps.
+
+### Next Planned Work
+
+* Add dashboard concepts.
+* Add sample identity risk metrics.
+* Add exception detection logic.
+* Add separation of duties examples.
+* Add Microsoft Entra ID integration examples.
+* Add dashboard-ready CSV or JSON exports.
+
+
 ## v0.2.0 - Visual Architecture and Reporting Expansion
 
 ### Added
