@@ -95,6 +95,7 @@ IdentityOS is organized into architecture documents, reference models, sample da
 | [Sample Governance Report](reports/sample-governance-report.md) | Summarizes sample policy decisions, governance requirements, risk levels, remediation actions, and audit reasons. |
 | [Sample Risk Score Report](reports/sample-risk-score-report.md) | Summarizes calculated identity risk scores, risk levels, risk factors, and recommended governance actions. |
 | [Sample Access Drift Report](reports/sample-access-drift-report.md) | Summarizes detected access drift, drift severity, excess access, and recommended remediation actions. |
+| [Sample Dashboard Summary](reports/sample-dashboard-summary.md) | Summarizes sample dashboard metrics for executive identity risk, lifecycle operations, governance, risk scoring, access drift, and automation health. |
 
 
 ### Architecture Documents
@@ -140,6 +141,7 @@ IdentityOS is organized into architecture documents, reference models, sample da
 | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | [Sample Identity Events](examples/sample-identity-events.json)   | Provides sample Joiner, Mover, Leaver, contractor, privileged access, and non-human identity events. |
 | [Sample Policy Decisions](examples/sample-policy-decisions.json) | Shows how IdentityOS evaluates identity events and produces policy decisions.                        |
+| [Sample Dashboard Metrics](examples/sample-dashboard-metrics.json) | Provides sample dashboard metrics for executive identity risk, lifecycle operations, governance, risk scoring, access drift, and automation health. |
 
 ### Prototype Automation
 
@@ -148,6 +150,7 @@ IdentityOS is organized into architecture documents, reference models, sample da
 | [Policy Evaluator](automation/policy-evaluator.py) | Reads sample identity events and policy decisions, then prints a policy evaluation summary. |
 | [Risk Scorer](automation/risk-scorer.py) | Calculates sample identity risk scores from identity events and policy decisions, then generates a Markdown risk score report. |
 | [Access Drift Detector](automation/access-drift-detector.py) | Detects sample access drift from identity events and policy decisions, then generates a Markdown access drift report. |
+| [Dashboard Summary Generator](automation/generate-dashboard-summary.py) | Reads sample dashboard metrics and generates a Markdown dashboard summary report. |
 
 ### Run the Prototype
 
