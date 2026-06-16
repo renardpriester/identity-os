@@ -69,6 +69,19 @@ IdentityOS approaches identity as an enterprise-wide system that must be:
 
 ---
 
+## Quick Links
+
+| Resource                                | Purpose                                                                                                                       |
+| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| [Project Summary](PROJECT_SUMMARY.md)   | A recruiter and interviewer-friendly overview of what IdentityOS is, what problem it solves, and what skills it demonstrates. |
+| [Documentation](docs/README.md)         | Core architecture and design documentation.                                                                                   |
+| [Diagrams](diagrams/README.md)          | Visual architecture and workflow diagrams.                                                                                    |
+| [Reference Models](reference/README.md) | Role catalog and access review reference models.                                                                              |
+| [Examples](examples/README.md)          | Sample identity events and policy decision datasets.                                                                          |
+| [Automation](automation/README.md)      | Prototype automation scripts and execution guidance.                                                                          |
+| [Changelog](CHANGELOG.md)               | Version history and project milestones.                                                                                       |
+
+
 ## Project Navigation
 
 IdentityOS is organized into architecture documents, reference models, sample data, and prototype automation.
