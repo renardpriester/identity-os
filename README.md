@@ -81,6 +81,7 @@ IdentityOS approaches identity as an enterprise-wide system that must be:
 | [Automation](automation/README.md)      | Prototype automation scripts and execution guidance.                                                                          |
 | [Changelog](CHANGELOG.md)               | Version history and project milestones.                                                                                       |
 | [Reports](reports/README.md) | Generated governance reports that turn IdentityOS sample data into audit and risk visibility. |
+| [Dashboard Design](dashboard/README.md) | Dashboard design concepts, wireframes, interface structure, and future prototype planning. |
 
 
 ## Project Navigation
@@ -96,6 +97,12 @@ IdentityOS is organized into architecture documents, reference models, sample da
 | [Sample Risk Score Report](reports/sample-risk-score-report.md) | Summarizes calculated identity risk scores, risk levels, risk factors, and recommended governance actions. |
 | [Sample Access Drift Report](reports/sample-access-drift-report.md) | Summarizes detected access drift, drift severity, excess access, and recommended remediation actions. |
 | [Sample Dashboard Summary](reports/sample-dashboard-summary.md) | Summarizes sample dashboard metrics for executive identity risk, lifecycle operations, governance, risk scoring, access drift, and automation health. |
+### Dashboard Design
+
+| File                                                    | Purpose                                                                                                                              |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| [Dashboard Index](dashboard/README.md)                  | Provides an overview of the IdentityOS dashboard design layer.                                                                       |
+| [Dashboard Wireframe](dashboard/dashboard-wireframe.md) | Defines the first dashboard layout, including KPI cards, navigation tabs, dashboard panels, filters, interactions, and data mapping. |
 
 
 ### Architecture Documents
