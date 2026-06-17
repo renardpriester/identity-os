@@ -114,6 +114,7 @@ This folder will eventually include:
 | `risk-dashboard.md`           | Defines the risk scoring and access drift dashboard view.         |
 | `streamlit-prototype/`        | Future Python dashboard prototype folder.                         |
 | [Dashboard Wireframe](dashboard-wireframe.md) | Defines the first text-based dashboard layout, including KPI cards, dashboard panels, navigation tabs, filters, interactions, and data mapping. |
+| [Dashboard Data Model](dashboard-data-model.md) | Defines dashboard views, panels, metric cards, tables, filters, drilldowns, data sources, and metric relationships. |
 
 ---
 
