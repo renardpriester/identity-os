@@ -104,6 +104,7 @@ IdentityOS is organized into architecture documents, reference models, sample da
 | [Dashboard Index](dashboard/README.md)                  | Provides an overview of the IdentityOS dashboard design layer.                                                                       |
 | [Dashboard Wireframe](dashboard/dashboard-wireframe.md) | Defines the first dashboard layout, including KPI cards, navigation tabs, dashboard panels, filters, interactions, and data mapping. |
 | [Dashboard Data Model](dashboard/dashboard-data-model.md) | Defines dashboard views, panels, metric cards, tables, filters, drilldowns, data sources, and metric relationships. |
+| [Executive Dashboard](dashboard/executive-dashboard.md) | Defines the leadership-facing dashboard view for identity risk, governance health, access drift, privileged access, automation status, and audit readiness. |
 
 
 ### Architecture Documents
