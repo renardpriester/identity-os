@@ -2,6 +2,33 @@
 
 All notable changes to IdentityOS will be documented in this file.
 
+
+## [v0.6.0] - Streamlit Dashboard Prototype
+
+### Added
+
+* Added the first interactive Streamlit dashboard prototype for IdentityOS.
+* Added a Streamlit prototype folder under `dashboard/streamlit-prototype`.
+* Added `app.py` to render IdentityOS dashboard metrics interactively.
+* Added `requirements.txt` for Streamlit prototype dependencies.
+* Added a Streamlit prototype README with local setup and run instructions.
+* Added dashboard prototype navigation links to the dashboard README.
+* Added dashboard prototype navigation links to the main README.
+
+### Prototype Capabilities
+
+* Displays executive identity risk metrics.
+* Displays lifecycle operations metrics.
+* Displays governance metrics.
+* Displays risk scoring metrics.
+* Displays access drift metrics.
+* Displays automation health metrics.
+* Displays generated report references.
+
+### Outcome
+
+* IdentityOS now includes an interactive dashboard prototype that turns static identity governance, risk, drift, automation, and reporting data into a visible operational experience.
+
 ---
 
 ## [v0.5.0] - Dashboard Design and Operational Visibility Expansion
