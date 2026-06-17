@@ -117,6 +117,7 @@ This folder will eventually include:
 | [Dashboard Data Model](dashboard-data-model.md) | Defines dashboard views, panels, metric cards, tables, filters, drilldowns, data sources, and metric relationships. |
 | [Executive Dashboard](executive-dashboard.md) | Defines the leadership-facing dashboard view for identity risk, governance health, access drift, privileged access, automation status, and audit readiness. |
 | [IAM Operations Dashboard](iam-operations-dashboard.md) | Defines the operational dashboard view for identity lifecycle activity, pending approvals, remediation tasks, access drift work, automation status, and generated reports. |
+| [Governance Dashboard](governance-dashboard.md) | Defines the governance dashboard view for access reviews, approvals, exceptions, remediation, audit evidence, governance queues, and compliance visibility. |
 
 ---
 
