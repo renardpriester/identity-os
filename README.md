@@ -109,6 +109,7 @@ IdentityOS is organized into architecture documents, reference models, sample da
 | [Risk Dashboard](dashboard/risk-dashboard.md) | Defines the risk dashboard view for identity risk scores, risk levels, risk factors, critical-risk queues, access drift risk, privileged access risk, and recommended actions. |
 | [Access Drift Dashboard](dashboard/access-drift-dashboard.md) | Defines the dashboard view for access drift, stale access, privilege creep, excess access, drift severity, remediation actions, and drift evidence. |
 | [Privileged Access Dashboard](dashboard/privileged-access-dashboard.md) | Defines the dashboard view for privileged identities, elevated access requests, standing privilege, access reviews, privileged drift, remediation actions, and audit evidence. |
+| [Contractor and Vendor Dashboard](dashboard/contractor-vendor-dashboard.md) | Defines the dashboard view for external identities, sponsor ownership, expiration tracking, renewal decisions, contractor drift, vendor risk, remediation actions, and audit evidence. |
 
 
 ### Architecture Documents
