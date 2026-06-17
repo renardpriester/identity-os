@@ -4,6 +4,32 @@ All notable changes to IdentityOS will be documented in this file.
 
 ---
 
+## [v0.5.0] - Dashboard Design and Operational Visibility Expansion
+
+### Added
+
+* Added dashboard design folder for IdentityOS operational and executive visibility.
+* Added executive dashboard design for leadership-level identity risk, governance, and access posture.
+* Added IAM operations dashboard design for lifecycle events, approvals, access drift, remediation, automation status, and generated reports.
+* Added governance dashboard design for access reviews, approvals, exceptions, remediation, audit evidence, and governance queues.
+* Added risk dashboard design for identity risk scores, risk levels, risk factors, critical-risk queues, privileged access risk, and recommended actions.
+* Added access drift dashboard design for stale access, privilege creep, excess access, drift severity, and remediation evidence.
+* Added privileged access dashboard design for elevated access, standing privilege, access reviews, privileged drift, and audit evidence.
+* Added contractor and vendor dashboard design for external identities, sponsor ownership, expiration tracking, renewal decisions, and contractor drift.
+* Added non-human identity dashboard design for service accounts, automation identities, workload identities, ownership, credential governance, and access scope.
+* Added automation health dashboard design for script status, report generation, failures, manual intervention, evidence outputs, and operational health.
+* Added audit evidence dashboard design for policy decisions, approvals, reviews, remediation proof, exception evidence, report evidence, and audit readiness.
+
+### Updated
+
+* Updated the dashboard README with links to completed dashboard design assets.
+* Updated the main README to expose dashboard design artifacts from the project front page.
+
+### Outcome
+
+* Completed the IdentityOS dashboard design layer, connecting identity lifecycle, governance, risk, access drift, privileged access, external identities, non-human identities, automation health, and audit evidence into a unified visibility model.
+
+
 ## v0.4.0 - Identity Analytics and Dashboard Concepts
 
 ### Added
