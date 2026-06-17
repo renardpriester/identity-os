@@ -115,6 +115,7 @@ This folder will eventually include:
 | `streamlit-prototype/`        | Future Python dashboard prototype folder.                         |
 | [Dashboard Wireframe](dashboard-wireframe.md) | Defines the first text-based dashboard layout, including KPI cards, dashboard panels, navigation tabs, filters, interactions, and data mapping. |
 | [Dashboard Data Model](dashboard-data-model.md) | Defines dashboard views, panels, metric cards, tables, filters, drilldowns, data sources, and metric relationships. |
+| [Streamlit Dashboard Prototype](streamlit-prototype/README.md) | Provides the first interactive IdentityOS dashboard prototype for executive risk, lifecycle operations, governance, risk scoring, access drift, automation health, and generated reports. |
 | [Executive Dashboard](executive-dashboard.md) | Defines the leadership-facing dashboard view for identity risk, governance health, access drift, privileged access, automation status, and audit readiness. |
 | [IAM Operations Dashboard](iam-operations-dashboard.md) | Defines the operational dashboard view for identity lifecycle activity, pending approvals, remediation tasks, access drift work, automation status, and generated reports. |
 | [Governance Dashboard](governance-dashboard.md) | Defines the governance dashboard view for access reviews, approvals, exceptions, remediation, audit evidence, governance queues, and compliance visibility. |
