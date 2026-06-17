@@ -124,6 +124,7 @@ This folder will eventually include:
 | [Contractor and Vendor Dashboard](contractor-vendor-dashboard.md) | Defines the dashboard view for external identities, sponsor ownership, expiration tracking, renewal decisions, contractor drift, vendor risk, remediation actions, and audit evidence. |
 | [Non-Human Identity Dashboard](non-human-identity-dashboard.md) | Defines the dashboard view for service accounts, automation identities, workload identities, ownership, credential governance, access scope, non-human identity drift, risk signals, and remediation actions. |
 | [Automation Health Dashboard](automation-health-dashboard.md) | Defines the dashboard view for automation scripts, job status, report generation, failures, manual intervention, evidence outputs, and operational health. |
+| [Audit Evidence Dashboard](audit-evidence-dashboard.md) | Defines the dashboard view for audit evidence, policy decisions, approvals, reviews, remediation proof, exception evidence, report evidence, and audit readiness. |
 
 ---
 
