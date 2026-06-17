@@ -106,6 +106,7 @@ IdentityOS is organized into architecture documents, reference models, sample da
 | [Dashboard Data Model](dashboard/dashboard-data-model.md) | Defines dashboard views, panels, metric cards, tables, filters, drilldowns, data sources, and metric relationships. |
 | [Executive Dashboard](dashboard/executive-dashboard.md) | Defines the leadership-facing dashboard view for identity risk, governance health, access drift, privileged access, automation status, and audit readiness. |
 | [IAM Operations Dashboard](dashboard/iam-operations-dashboard.md) | Defines the operational dashboard view for identity lifecycle activity, pending approvals, remediation tasks, access drift work, automation status, and generated reports. |
+| [Risk Dashboard](dashboard/risk-dashboard.md) | Defines the risk dashboard view for identity risk scores, risk levels, risk factors, critical-risk queues, access drift risk, privileged access risk, and recommended actions. |
 
 
 ### Architecture Documents
