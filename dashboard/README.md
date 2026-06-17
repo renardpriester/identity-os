@@ -115,6 +115,7 @@ This folder will eventually include:
 | `streamlit-prototype/`        | Future Python dashboard prototype folder.                         |
 | [Dashboard Wireframe](dashboard-wireframe.md) | Defines the first text-based dashboard layout, including KPI cards, dashboard panels, navigation tabs, filters, interactions, and data mapping. |
 | [Dashboard Data Model](dashboard-data-model.md) | Defines dashboard views, panels, metric cards, tables, filters, drilldowns, data sources, and metric relationships. |
+| [Executive Dashboard](executive-dashboard.md) | Defines the leadership-facing dashboard view for identity risk, governance health, access drift, privileged access, automation status, and audit readiness. |
 
 ---
 
