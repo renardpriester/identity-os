@@ -129,6 +129,23 @@ Risk Metrics
 
 ---
 
+## Interactive Dashboard Prototype
+
+IdentityOS includes an initial Streamlit dashboard prototype that transforms sample identity governance, risk, access drift, automation, and reporting metrics into an interactive dashboard experience.
+
+The prototype demonstrates how IdentityOS could provide operational visibility across:
+
+* Executive identity risk
+* Identity lifecycle operations
+* Governance metrics
+* Risk scoring results
+* Access drift findings
+* Automation health
+* Generated reports and evidence artifacts
+
+This moves IdentityOS beyond static documentation by showing how identity architecture can become an interactive operational dashboard for IAM, security, governance, audit, and leadership teams.
+
+
 ## Sample Scenarios
 
 IdentityOS includes sample scenarios for:
