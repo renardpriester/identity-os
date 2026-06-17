@@ -123,6 +123,7 @@ This folder will eventually include:
 | [Privileged Access Dashboard](privileged-access-dashboard.md) | Defines the dashboard view for privileged identities, elevated access requests, standing privilege, access reviews, privileged drift, remediation actions, and audit evidence. |
 | [Contractor and Vendor Dashboard](contractor-vendor-dashboard.md) | Defines the dashboard view for external identities, sponsor ownership, expiration tracking, renewal decisions, contractor drift, vendor risk, remediation actions, and audit evidence. |
 | [Non-Human Identity Dashboard](non-human-identity-dashboard.md) | Defines the dashboard view for service accounts, automation identities, workload identities, ownership, credential governance, access scope, non-human identity drift, risk signals, and remediation actions. |
+| [Automation Health Dashboard](automation-health-dashboard.md) | Defines the dashboard view for automation scripts, job status, report generation, failures, manual intervention, evidence outputs, and operational health. |
 
 ---
 
