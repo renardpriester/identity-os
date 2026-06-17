@@ -120,6 +120,7 @@ This folder will eventually include:
 | [Governance Dashboard](governance-dashboard.md) | Defines the governance dashboard view for access reviews, approvals, exceptions, remediation, audit evidence, governance queues, and compliance visibility. |
 | [Risk Dashboard](risk-dashboard.md) | Defines the risk dashboard view for identity risk scores, risk levels, risk factors, critical-risk queues, access drift risk, privileged access risk, and recommended actions. |
 | [Access Drift Dashboard](access-drift-dashboard.md) | Defines the dashboard view for access drift, stale access, privilege creep, excess access, drift severity, remediation actions, and drift evidence. |
+| [Privileged Access Dashboard](privileged-access-dashboard.md) | Defines the dashboard view for privileged identities, elevated access requests, standing privilege, access reviews, privileged drift, remediation actions, and audit evidence. |
 
 ---
 
