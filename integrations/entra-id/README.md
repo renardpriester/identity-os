@@ -172,19 +172,20 @@ IdentityOS integration with Microsoft Entra ID should follow these principles:
 
 This folder will include the following documents:
 
-| Document                           | Purpose                                                                         |
-| ---------------------------------- | ------------------------------------------------------------------------------- |
-| `graph-permissions.md`             | Defines Microsoft Graph permissions IdentityOS may require.                     |
-| `joiner-graph-flow.md`             | Maps IdentityOS joiner events to Microsoft Graph actions.                       |
-| `mover-graph-flow.md`              | Maps mover events to access changes and drift review.                           |
-| `leaver-graph-flow.md`             | Maps leaver events to disablement and access removal actions.                   |
-| `access-package-mapping.md`        | Maps IdentityOS role packages to Microsoft Entra access packages.               |
-| `app-role-assignment-model.md`     | Describes application role assignment concepts.                                 |
-| `privileged-access-integration.md` | Describes privileged access and PIM integration concepts.                       |
-| `audit-evidence-mapping.md`        | Maps Microsoft Entra and Graph data to IdentityOS audit evidence.               |
-| `sample-graph-actions.ps1`         | Provides sample Microsoft Graph PowerShell actions for lab-style demonstration. |
+## Integration Documents
 
----
+| Document                                                          | Purpose                                                                                                                                                                  |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [Microsoft Graph Permissions Model](graph-permissions.md)         | Defines least-privilege Microsoft Graph permissions for reporting, lifecycle automation, governance, app role assignments, privileged access, and audit evidence.        |
+| [Joiner Graph Flow](joiner-graph-flow.md)                         | Maps IdentityOS joiner lifecycle events to Microsoft Graph user creation, access assignment, approval, risk, and evidence concepts.                                      |
+| [Mover Graph Flow](mover-graph-flow.md)                           | Maps mover lifecycle events to user attribute updates, access changes, access drift detection, remediation, and audit evidence.                                          |
+| [Leaver Graph Flow](leaver-graph-flow.md)                         | Maps leaver lifecycle events to account disablement, session revocation, access removal, privileged access handling, and offboarding evidence.                           |
+| [Access Package Mapping](access-package-mapping.md)               | Maps IdentityOS role packages to Microsoft Entra entitlement management access packages, assignment policies, approvals, expiration, and reviews.                        |
+| [App Role Assignment Model](app-role-assignment-model.md)         | Defines how IdentityOS models application access through Microsoft Entra app role assignments.                                                                           |
+| [Privileged Access Integration](privileged-access-integration.md) | Maps IdentityOS privileged access workflows to Microsoft Entra PIM concepts including eligibility, activation, approval, expiration, and review.                         |
+| [Audit Evidence Mapping](audit-evidence-mapping.md)               | Maps IdentityOS evidence requirements to Microsoft Entra audit logs, sign-in logs, directory activity, assignments, reports, and dashboard evidence.                     |
+| [Sample Microsoft Graph Actions](sample-graph-actions.ps1)        | Provides a lab-safe PowerShell reference script showing dry-run examples for joiner, mover, leaver, group membership, app role assignment, and audit evidence workflows. |
+
 
 ## Safety Note
 
