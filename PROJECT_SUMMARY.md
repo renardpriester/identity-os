@@ -10,6 +10,24 @@ IdentityOS connects business events to secure identity outcomes.
 
 ---
 
+## Microsoft Entra ID Integration Blueprint
+
+IdentityOS includes a Microsoft Entra ID integration blueprint that demonstrates how the platform concept could connect to a real enterprise identity provider and Microsoft Graph automation layer.
+
+The integration blueprint shows how IdentityOS could map identity lifecycle events and governance decisions to Microsoft Entra ID concepts such as:
+
+* User lifecycle management
+* Group membership changes
+* Application role assignments
+* Access package assignments
+* Privileged access workflows
+* Microsoft Graph permissions
+* Audit and sign-in evidence
+* Governance and reporting outputs
+
+This strengthens IdentityOS as an IAM architecture portfolio project by showing how the system could move from a conceptual identity operating model into a Microsoft identity ecosystem using Entra ID and Microsoft Graph.
+
+
 ## Problem
 
 Many organizations struggle with identity risk because access is often managed manually, inconsistently, or reactively.
