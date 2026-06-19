@@ -200,6 +200,13 @@ IdentityOS is organized around six core engines.
 
 ---
 
+## Integration Blueprints
+
+| Area                                                                        | Description                                                                                                                                                                                                      |
+| --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Microsoft Entra ID Integration Blueprint](integrations/entra-id/README.md) | Defines how IdentityOS could integrate with Microsoft Entra ID and Microsoft Graph for lifecycle automation, access packages, app role assignments, privileged access, audit evidence, and sample Graph actions. |
+
+
 ## High-Level Architecture
 
 ```mermaid
