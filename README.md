@@ -69,6 +69,30 @@ IdentityOS approaches identity as an enterprise-wide system that must be:
 
 ---
 
+## Hiring Manager Quick View
+
+IdentityOS is an enterprise-style IAM architecture and automation portfolio project designed to demonstrate identity lifecycle management, access governance, risk scoring, access drift detection, Microsoft Entra ID integration concepts, dashboard visibility, and audit evidence.
+
+### What This Project Demonstrates
+
+* Identity lifecycle thinking across Joiner, Mover, Leaver, Contractor, Vendor, Privileged Access, and Non-Human Identity workflows.
+* Policy-driven access decisions with governance, approval, review, and audit evidence requirements.
+* Risk scoring and access drift detection for stale access, privilege creep, and excessive access.
+* Microsoft Entra ID and Microsoft Graph integration concepts for users, groups, app role assignments, access packages, privileged access, and audit evidence.
+* Interactive dashboard prototyping with Streamlit to visualize IAM risk, governance, lifecycle, drift, automation, and reporting metrics.
+
+### Best Starting Points
+
+| Area                                     | Link                                                                               |
+| ---------------------------------------- | ---------------------------------------------------------------------------------- |
+| Project Summary                          | [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md)                                           |
+| Streamlit Dashboard Prototype            | [dashboard/streamlit-prototype/README.md](dashboard/streamlit-prototype/README.md) |
+| Microsoft Entra ID Integration Blueprint | [integrations/entra-id/README.md](integrations/entra-id/README.md)                 |
+| Risk Scoring Model                       | [reference/risk-scoring-model.md](reference/risk-scoring-model.md)                 |
+| Access Drift Model                       | [reference/access-drift-model.md](reference/access-drift-model.md)                 |
+| Audit Evidence Dashboard                 | [dashboard/audit-evidence-dashboard.md](dashboard/audit-evidence-dashboard.md)     |
+
+
 ## Quick Links
 
 | Resource                                | Purpose                                                                                                                       |
