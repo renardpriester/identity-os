@@ -2,6 +2,32 @@
 
 All notable changes to IdentityOS will be documented in this file.
 
+## [v0.7.0] - Microsoft Entra ID Integration Blueprint
+
+### Added
+
+* Added Microsoft Entra ID integration blueprint folder under `integrations/entra-id`.
+* Added Entra ID integration overview explaining how IdentityOS could connect to Microsoft Entra ID and Microsoft Graph.
+* Added Microsoft Graph permissions model focused on least privilege, read-only reporting, lifecycle automation, governance, privileged access, and audit evidence.
+* Added Joiner Graph flow mapping IdentityOS joiner events to Microsoft Graph user creation, access assignment, approval, risk, and evidence concepts.
+* Added Mover Graph flow mapping role and department changes to access updates, access removal, drift detection, remediation, and evidence.
+* Added Leaver Graph flow mapping offboarding events to account disablement, session revocation, access removal, privileged access handling, and audit evidence.
+* Added access package mapping model for Microsoft Entra entitlement management concepts.
+* Added app role assignment model for application access governance.
+* Added privileged access integration model mapping IdentityOS privileged workflows to Microsoft Entra PIM concepts.
+* Added audit evidence mapping model connecting IdentityOS evidence requirements to Microsoft Entra audit, sign-in, assignment, and reporting evidence.
+* Added lab-safe sample Microsoft Graph PowerShell actions script for joiner, mover, leaver, group membership, app role assignment, and audit evidence workflows.
+
+### Updated
+
+* Updated the Entra ID integration README with links to all integration documents.
+* Updated the main README with a new Integration Blueprints section.
+
+### Outcome
+
+* IdentityOS now includes a Microsoft Entra ID integration blueprint that shows how the platform concept could connect to real enterprise IAM services, Microsoft Graph automation, entitlement management, privileged access governance, and audit evidence workflows.
+
+
 
 ## [v0.6.0] - Streamlit Dashboard Prototype
 
