@@ -2,6 +2,46 @@
 
 All notable changes to IdentityOS will be documented in this file.
 
+## v0.8.0 - Simulated IAM Operating System Foundation
+
+### Added
+
+* Added IdentityOS Core as the simulated IAM operating system layer.
+* Added `identityos-core/README.md` to define the purpose, scope, and roadmap for the core engine.
+* Added `identityos-core/data/role-packages.json` to define role-based access packages.
+* Added `identityos-core/data/sample-hr-events.json` to model Joiner, Mover, Leaver, Contractor, Privileged Access, and Non-Human Identity lifecycle events.
+* Added `identityos-core/engine/process-identity-event.py` to process lifecycle events and generate IAM decisions.
+* Added generated ticket output under `identityos-core/outputs/tickets/`.
+* Added generated audit evidence output under `identityos-core/outputs/evidence/`.
+* Added dashboard-ready core output under `identityos-core/outputs/dashboard/`.
+
+### Changed
+
+* Enhanced the Streamlit dashboard to include an **IdentityOS Core Output** view.
+* Connected the Streamlit dashboard to generated IdentityOS Core output.
+* Updated the Streamlit prototype documentation to explain the core dashboard integration.
+* Added an IdentityOS Operating Model Roadmap to define how deep the project is intended to go.
+
+### Demonstrated
+
+* HR lifecycle event intake.
+* Role package mapping.
+* Access assignment planning.
+* Approval-required logic.
+* Mock ticket generation.
+* Risk classification.
+* Access drift detection.
+* Audit evidence generation.
+* Dashboard-ready IAM output.
+
+### Portfolio Value
+
+This release moves IdentityOS from architecture documentation and dashboard concepts into a working IAM orchestration prototype.
+
+IdentityOS now demonstrates how identity lifecycle events can become access decisions, approval records, tickets, audit evidence, and dashboard metrics.
+
+
+
 ## [v0.7.0] - Microsoft Entra ID Integration Blueprint
 
 ### Added
