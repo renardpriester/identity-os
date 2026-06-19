@@ -9,7 +9,9 @@ import streamlit as st
 ROOT_DIR = Path(__file__).resolve().parents[2]
 METRICS_PATH = ROOT_DIR / "examples" / "sample-dashboard-metrics.json"
 REPORTS_DIR = ROOT_DIR / "reports"
-
+CORE_DASHBOARD_OUTPUT_PATH = (
+    ROOT_DIR / "identityos-core" / "outputs" / "dashboard" / "dashboard-output.json"
+)
 
 st.set_page_config(
     page_title="IdentityOS Dashboard Prototype",
@@ -22,7 +24,12 @@ def load_json(path: Path) -> Dict[str, Any]:
     """Load a JSON file and return a dictionary."""
     with path.open("r", encoding="utf-8") as file:
         return json.load(file)
+def load_optional_json(path: Path) -> Dict[str, Any]:
+    """Load a JSON file if it exists. Return an empty dictionary if missing."""
+    if not path.exists():
+        return {}
 
+    return load_json(path)
 
 def clean_label(value: str) -> str:
     """Convert snake_case keys into readable dashboard labels."""
@@ -129,6 +136,8 @@ if not METRICS_PATH.exists():
 raw_metrics = load_json(METRICS_PATH)
 metrics = normalize_metrics(raw_metrics)
 
+core_dashboard_output = load_optional_json(CORE_DASHBOARD_OUTPUT_PATH)
+
 executive_identity_risk = metrics.get("executive_identity_risk", {})
 lifecycle_operations = metrics.get("lifecycle_operations", {})
 governance = metrics.get("governance", {})
@@ -147,6 +156,7 @@ selected_view = st.sidebar.radio(
         "Governance",
         "Risk and Drift",
         "Automation Health",
+        "IdentityOS Core Output",
         "Reports",
     ],
 )
@@ -422,7 +432,101 @@ It helps answer:
 
 elif selected_view == "Reports":
     st.header("Generated Reports and Evidence")
+elif selected_view == "IdentityOS Core Output":
+    st.header("IdentityOS Core Output")
 
+    if not core_dashboard_output:
+        st.warning(
+            "No IdentityOS Core output found yet. Run the core processor first:"
+        )
+        st.code(
+            ".\\.venv\\Scripts\\python.exe identityos-core\\engine\\process-identity-event.py",
+            language="powershell",
+        )
+    else:
+        render_metric_row(
+            [
+                (
+                    "Events Processed",
+                    core_dashboard_output.get("total_events_processed", 0),
+                ),
+                (
+                    "Tickets Created",
+                    core_dashboard_output.get("tickets_created", 0),
+                ),
+                (
+                    "Approvals Required",
+                    core_dashboard_output.get("approval_required_count", 0),
+                ),
+                (
+                    "Drift Detected",
+                    core_dashboard_output.get("drift_detected_count", 0),
+                ),
+            ]
+        )
+
+        st.divider()
+
+        left, right = st.columns(2)
+
+        with left:
+            st.subheader("Risk Counts")
+            risk_counts = core_dashboard_output.get("risk_counts", {})
+            risk_df = section_to_dataframe(risk_counts)
+            risk_chart_df = section_to_chart_dataframe(risk_counts)
+
+            st.dataframe(risk_df, width="stretch")
+
+            if not risk_chart_df.empty:
+                st.bar_chart(risk_chart_df.set_index("Metric"), width="stretch")
+
+        with right:
+            st.subheader("Event Type Counts")
+            event_type_counts = core_dashboard_output.get("event_type_counts", {})
+            event_df = section_to_dataframe(event_type_counts)
+            event_chart_df = section_to_chart_dataframe(event_type_counts)
+
+            st.dataframe(event_df, width="stretch")
+
+            if not event_chart_df.empty:
+                st.bar_chart(event_chart_df.set_index("Metric"), width="stretch")
+
+        st.divider()
+
+        st.subheader("Generated Output Files")
+
+        output_paths = core_dashboard_output.get("outputs", {})
+
+        output_df = pd.DataFrame(
+            [
+                {
+                    "Output Type": clean_label(key),
+                    "Path": value,
+                }
+                for key, value in output_paths.items()
+            ]
+        )
+
+        st.dataframe(output_df, width="stretch")
+
+        st.markdown(
+            """
+### Core Output Interpretation
+
+This view shows the result of the simulated IAM operating system engine.
+
+It connects:
+
+- HR lifecycle events
+- Role package mapping
+- Approval requirements
+- Mock ticket generation
+- Access drift detection
+- Risk scoring
+- Audit evidence
+- Dashboard-ready output
+"""
+        )
     reports = [
         {
             "Report": "Governance Report",
