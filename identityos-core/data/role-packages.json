@@ -1,0 +1,223 @@
+{
+  "role_packages": [
+    {
+      "role_package_id": "RP-BASE-EMPLOYEE",
+      "name": "Base Employee Access",
+      "description": "Standard access assigned to full-time employees.",
+      "department": "All",
+      "job_titles": [
+        "All Employees"
+      ],
+      "worker_types": [
+        "Employee"
+      ],
+      "access": [
+        "Microsoft 365 Standard",
+        "Company Intranet",
+        "Employee Self-Service Portal"
+      ],
+      "approval_required": false,
+      "approval_owner": "IAM Policy",
+      "risk_level": "Low",
+      "review_frequency": "Annual",
+      "expiration_required": false
+    },
+    {
+      "role_package_id": "RP-FINANCE-ANALYST",
+      "name": "Finance Analyst",
+      "description": "Access package for Finance users responsible for financial reporting and analysis.",
+      "department": "Finance",
+      "job_titles": [
+        "Financial Analyst",
+        "Senior Financial Analyst",
+        "Finance Associate"
+      ],
+      "worker_types": [
+        "Employee"
+      ],
+      "access": [
+        "Base Employee Access",
+        "Finance SharePoint",
+        "Financial Reporting Portal",
+        "Budget Planning Workspace"
+      ],
+      "approval_required": true,
+      "approval_owner": "Finance Application Owner",
+      "risk_level": "Medium",
+      "review_frequency": "Quarterly",
+      "expiration_required": false
+    },
+    {
+      "role_package_id": "RP-HR-GENERALIST",
+      "name": "HR Generalist",
+      "description": "Access package for HR users handling employee records and HR operations.",
+      "department": "HR",
+      "job_titles": [
+        "HR Generalist",
+        "HR Specialist",
+        "People Operations Associate"
+      ],
+      "worker_types": [
+        "Employee"
+      ],
+      "access": [
+        "Base Employee Access",
+        "HR SharePoint",
+        "Employee Records System",
+        "Benefits Administration Portal"
+      ],
+      "approval_required": true,
+      "approval_owner": "HR Application Owner",
+      "risk_level": "High",
+      "review_frequency": "Quarterly",
+      "expiration_required": false
+    },
+    {
+      "role_package_id": "RP-LEGAL-OPERATIONS",
+      "name": "Legal Operations",
+      "description": "Access package for Legal Operations users requiring legal workspace and document system access.",
+      "department": "Legal",
+      "job_titles": [
+        "Legal Operations Analyst",
+        "Legal Operations Specialist",
+        "Legal Assistant"
+      ],
+      "worker_types": [
+        "Employee"
+      ],
+      "access": [
+        "Base Employee Access",
+        "Legal Operations Workspace",
+        "Legal Document Management System",
+        "Matter Management Portal"
+      ],
+      "approval_required": true,
+      "approval_owner": "Legal Application Owner",
+      "risk_level": "High",
+      "review_frequency": "Quarterly",
+      "expiration_required": false
+    },
+    {
+      "role_package_id": "RP-SECURITY-READER",
+      "name": "Security Reader",
+      "description": "Read-only security visibility package for security analysts.",
+      "department": "Security",
+      "job_titles": [
+        "Security Analyst",
+        "IAM Analyst",
+        "Identity Security Analyst"
+      ],
+      "worker_types": [
+        "Employee"
+      ],
+      "access": [
+        "Base Employee Access",
+        "Security Dashboard Read Access",
+        "Identity Monitoring Portal",
+        "Audit Log Reader"
+      ],
+      "approval_required": true,
+      "approval_owner": "Security Manager",
+      "risk_level": "High",
+      "review_frequency": "Monthly",
+      "expiration_required": false
+    },
+    {
+      "role_package_id": "RP-IT-HELPDESK",
+      "name": "IT Helpdesk",
+      "description": "Access package for IT helpdesk users supporting account and device requests.",
+      "department": "IT",
+      "job_titles": [
+        "Helpdesk Technician",
+        "IT Support Specialist",
+        "Desktop Support Analyst"
+      ],
+      "worker_types": [
+        "Employee"
+      ],
+      "access": [
+        "Base Employee Access",
+        "IT Support Queue",
+        "Device Management Portal",
+        "User Support Knowledge Base"
+      ],
+      "approval_required": true,
+      "approval_owner": "IT Operations Manager",
+      "risk_level": "Medium",
+      "review_frequency": "Quarterly",
+      "expiration_required": false
+    },
+    {
+      "role_package_id": "RP-CONTRACTOR-PROJECT",
+      "name": "Contractor Project Access",
+      "description": "Temporary access package for contractors assigned to a specific project.",
+      "department": "Project",
+      "job_titles": [
+        "Contractor",
+        "Project Consultant",
+        "Implementation Consultant"
+      ],
+      "worker_types": [
+        "Contractor"
+      ],
+      "access": [
+        "Contractor Baseline Access",
+        "Project Workspace",
+        "Limited Microsoft 365 Access"
+      ],
+      "approval_required": true,
+      "approval_owner": "Business Sponsor",
+      "risk_level": "High",
+      "review_frequency": "Monthly",
+      "expiration_required": true
+    },
+    {
+      "role_package_id": "RP-VENDOR-LEGALDOCS",
+      "name": "Vendor Legal Document Access",
+      "description": "Temporary vendor access to approved legal document resources.",
+      "department": "Legal",
+      "job_titles": [
+        "Vendor",
+        "External Legal Partner",
+        "Outside Counsel"
+      ],
+      "worker_types": [
+        "Vendor"
+      ],
+      "access": [
+        "Vendor Baseline Access",
+        "Legal Document Portal",
+        "Approved Matter Workspace"
+      ],
+      "approval_required": true,
+      "approval_owner": "Legal Sponsor",
+      "risk_level": "High",
+      "review_frequency": "Monthly",
+      "expiration_required": true
+    },
+    {
+      "role_package_id": "RP-NHI-SERVICE-ACCOUNT",
+      "name": "Non-Human Identity Service Account Review",
+      "description": "Governance package for service accounts, workload identities, and automation identities.",
+      "department": "IT",
+      "job_titles": [
+        "Service Account",
+        "Automation Identity",
+        "Workload Identity"
+      ],
+      "worker_types": [
+        "ServiceAccount"
+      ],
+      "access": [
+        "Application Integration Access",
+        "Automation Scope",
+        "Credential Review Required"
+      ],
+      "approval_required": true,
+      "approval_owner": "Technical Owner",
+      "risk_level": "Critical",
+      "review_frequency": "Quarterly",
+      "expiration_required": false
+    }
+  ]
+}
