@@ -1,0 +1,138 @@
+{
+  "identity_events": [
+    {
+      "event_id": "EVT-JOINER-001",
+      "event_type": "joiner",
+      "display_name": "Sarah Johnson",
+      "user_principal_name": "sarah.johnson@contoso.example",
+      "department": "Finance",
+      "job_title": "Financial Analyst",
+      "location": "Miami",
+      "worker_type": "Employee",
+      "manager": "Michelle Carter",
+      "start_date": "2026-07-01",
+      "sponsor": null,
+      "expiration_date": null
+    },
+    {
+      "event_id": "EVT-JOINER-002",
+      "event_type": "joiner",
+      "display_name": "Priya Patel",
+      "user_principal_name": "priya.patel@contoso.example",
+      "department": "Security",
+      "job_title": "Security Analyst",
+      "location": "Orlando",
+      "worker_type": "Employee",
+      "manager": "Daniel Kim",
+      "start_date": "2026-07-08",
+      "sponsor": null,
+      "expiration_date": null
+    },
+    {
+      "event_id": "EVT-MOVER-001",
+      "event_type": "mover",
+      "display_name": "Jordan Ellis",
+      "user_principal_name": "jordan.ellis@contoso.example",
+      "previous_department": "Finance",
+      "new_department": "Legal",
+      "previous_job_title": "Financial Analyst",
+      "new_job_title": "Legal Operations Analyst",
+      "location": "Miami",
+      "worker_type": "Employee",
+      "manager": "Alicia Roberts",
+      "effective_date": "2026-07-15",
+      "current_access": [
+        "Base Employee Access",
+        "Finance SharePoint",
+        "Financial Reporting Portal",
+        "Budget Planning Workspace"
+      ]
+    },
+    {
+      "event_id": "EVT-LEAVER-001",
+      "event_type": "leaver",
+      "display_name": "Morgan Lee",
+      "user_principal_name": "morgan.lee@contoso.example",
+      "department": "Finance",
+      "job_title": "Financial Analyst",
+      "location": "Miami",
+      "worker_type": "Employee",
+      "manager": "Michelle Carter",
+      "termination_date": "2026-07-18",
+      "termination_type": "Standard Leaver",
+      "privileged_access": false,
+      "current_access": [
+        "Base Employee Access",
+        "Finance SharePoint",
+        "Financial Reporting Portal",
+        "Budget Planning Workspace"
+      ]
+    },
+    {
+      "event_id": "EVT-CONTRACTOR-001",
+      "event_type": "contractor_onboarding",
+      "display_name": "Alex Rivera",
+      "user_principal_name": "alex.rivera.contractor@contoso.example",
+      "department": "Project",
+      "job_title": "Implementation Consultant",
+      "location": "Remote",
+      "worker_type": "Contractor",
+      "manager": "Nina Brooks",
+      "sponsor": "Nina Brooks",
+      "start_date": "2026-07-10",
+      "expiration_date": "2026-10-10"
+    },
+    {
+      "event_id": "EVT-CONTRACTOR-EXP-001",
+      "event_type": "contractor_expiration",
+      "display_name": "Taylor Morgan",
+      "user_principal_name": "taylor.morgan.contractor@contoso.example",
+      "department": "Project",
+      "job_title": "Project Consultant",
+      "location": "Remote",
+      "worker_type": "Contractor",
+      "manager": "Nina Brooks",
+      "sponsor": "Nina Brooks",
+      "expiration_date": "2026-06-30",
+      "current_access": [
+        "Contractor Baseline Access",
+        "Project Workspace",
+        "Limited Microsoft 365 Access"
+      ]
+    },
+    {
+      "event_id": "EVT-PRIV-001",
+      "event_type": "privileged_access_request",
+      "display_name": "Daniel Kim",
+      "user_principal_name": "daniel.kim@contoso.example",
+      "department": "IT",
+      "job_title": "IT Support Specialist",
+      "location": "Orlando",
+      "worker_type": "Employee",
+      "manager": "Priya Patel",
+      "requested_access": [
+        "User Administrator"
+      ],
+      "business_justification": "Temporary support for user lifecycle administration.",
+      "duration_hours": 2
+    },
+    {
+      "event_id": "EVT-NHI-001",
+      "event_type": "non_human_identity_review",
+      "display_name": "svc-finance-reporting",
+      "user_principal_name": "svc-finance-reporting@contoso.example",
+      "department": "IT",
+      "job_title": "Service Account",
+      "location": "Cloud",
+      "worker_type": "ServiceAccount",
+      "owner": "Finance Systems Team",
+      "purpose": "Automated financial reporting integration.",
+      "current_access": [
+        "Application Integration Access",
+        "Automation Scope",
+        "Financial Reporting Portal"
+      ],
+      "credential_review_required": true
+    }
+  ]
+}
