@@ -1,0 +1,26 @@
+{
+  "generated_at": "2026-06-19T21:09:02.027294+00:00",
+  "total_events_processed": 8,
+  "tickets_created": 8,
+  "approval_required_count": 8,
+  "drift_detected_count": 3,
+  "risk_counts": {
+    "Low": 0,
+    "Medium": 3,
+    "High": 4,
+    "Critical": 1
+  },
+  "event_type_counts": {
+    "joiner": 2,
+    "mover": 1,
+    "leaver": 1,
+    "contractor_onboarding": 1,
+    "contractor_expiration": 1,
+    "privileged_access_request": 1,
+    "non_human_identity_review": 1
+  },
+  "outputs": {
+    "tickets": "C:\\Users\\jrsos\\OneDrive - Osceola County School District\\Desktop\\identity-os-starter\\identityos-core\\outputs\\tickets\\tickets.json",
+    "audit_evidence": "C:\\Users\\jrsos\\OneDrive - Osceola County School District\\Desktop\\identity-os-starter\\identityos-core\\outputs\\evidence\\audit-evidence.json"
+  }
+}

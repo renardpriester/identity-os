@@ -1,0 +1,187 @@
+{
+  "generated_at": "2026-06-19T21:09:02.027276+00:00",
+  "evidence_records": [
+    {
+      "evidence_id": "EVID-EVT-JOINER-001",
+      "event_id": "EVT-JOINER-001",
+      "event_type": "joiner",
+      "identity": "Sarah Johnson",
+      "user_principal_name": "sarah.johnson@contoso.example",
+      "decision_type": "Access Assignment Plan",
+      "risk_level": "Medium",
+      "access_to_add": [
+        "Microsoft 365 Standard",
+        "Company Intranet",
+        "Employee Self-Service Portal",
+        "Base Employee Access",
+        "Finance SharePoint",
+        "Financial Reporting Portal",
+        "Budget Planning Workspace"
+      ],
+      "access_to_remove": [],
+      "approval_required": true,
+      "ticket_created": true,
+      "drift_detected": false,
+      "audit_required": true,
+      "status": "Generated",
+      "generated_at": "2026-06-19T21:09:02.026994+00:00"
+    },
+    {
+      "evidence_id": "EVID-EVT-JOINER-002",
+      "event_id": "EVT-JOINER-002",
+      "event_type": "joiner",
+      "identity": "Priya Patel",
+      "user_principal_name": "priya.patel@contoso.example",
+      "decision_type": "Access Assignment Plan",
+      "risk_level": "High",
+      "access_to_add": [
+        "Microsoft 365 Standard",
+        "Company Intranet",
+        "Employee Self-Service Portal",
+        "Base Employee Access",
+        "Security Dashboard Read Access",
+        "Identity Monitoring Portal",
+        "Audit Log Reader"
+      ],
+      "access_to_remove": [],
+      "approval_required": true,
+      "ticket_created": true,
+      "drift_detected": false,
+      "audit_required": true,
+      "status": "Generated",
+      "generated_at": "2026-06-19T21:09:02.027052+00:00"
+    },
+    {
+      "evidence_id": "EVID-EVT-MOVER-001",
+      "event_id": "EVT-MOVER-001",
+      "event_type": "mover",
+      "identity": "Jordan Ellis",
+      "user_principal_name": "jordan.ellis@contoso.example",
+      "decision_type": "Mover Access Change Plan",
+      "risk_level": "High",
+      "access_to_add": [
+        "Microsoft 365 Standard",
+        "Company Intranet",
+        "Employee Self-Service Portal",
+        "Legal Operations Workspace",
+        "Legal Document Management System",
+        "Matter Management Portal"
+      ],
+      "access_to_remove": [
+        "Finance SharePoint",
+        "Financial Reporting Portal",
+        "Budget Planning Workspace"
+      ],
+      "approval_required": true,
+      "ticket_created": true,
+      "drift_detected": true,
+      "audit_required": true,
+      "status": "Generated",
+      "generated_at": "2026-06-19T21:09:02.027131+00:00"
+    },
+    {
+      "evidence_id": "EVID-EVT-LEAVER-001",
+      "event_id": "EVT-LEAVER-001",
+      "event_type": "leaver",
+      "identity": "Morgan Lee",
+      "user_principal_name": "morgan.lee@contoso.example",
+      "decision_type": "Access Removal Plan",
+      "risk_level": "Medium",
+      "access_to_add": [],
+      "access_to_remove": [
+        "Base Employee Access",
+        "Finance SharePoint",
+        "Financial Reporting Portal",
+        "Budget Planning Workspace"
+      ],
+      "approval_required": true,
+      "ticket_created": true,
+      "drift_detected": true,
+      "audit_required": true,
+      "status": "Generated",
+      "generated_at": "2026-06-19T21:09:02.027148+00:00"
+    },
+    {
+      "evidence_id": "EVID-EVT-CONTRACTOR-001",
+      "event_id": "EVT-CONTRACTOR-001",
+      "event_type": "contractor_onboarding",
+      "identity": "Alex Rivera",
+      "user_principal_name": "alex.rivera.contractor@contoso.example",
+      "decision_type": "Access Assignment Plan",
+      "risk_level": "High",
+      "access_to_add": [
+        "Contractor Baseline Access",
+        "Project Workspace",
+        "Limited Microsoft 365 Access"
+      ],
+      "access_to_remove": [],
+      "approval_required": true,
+      "ticket_created": true,
+      "drift_detected": false,
+      "audit_required": true,
+      "status": "Generated",
+      "generated_at": "2026-06-19T21:09:02.027191+00:00"
+    },
+    {
+      "evidence_id": "EVID-EVT-CONTRACTOR-EXP-001",
+      "event_id": "EVT-CONTRACTOR-EXP-001",
+      "event_type": "contractor_expiration",
+      "identity": "Taylor Morgan",
+      "user_principal_name": "taylor.morgan.contractor@contoso.example",
+      "decision_type": "Access Removal Plan",
+      "risk_level": "Medium",
+      "access_to_add": [],
+      "access_to_remove": [
+        "Contractor Baseline Access",
+        "Project Workspace",
+        "Limited Microsoft 365 Access"
+      ],
+      "approval_required": true,
+      "ticket_created": true,
+      "drift_detected": true,
+      "audit_required": true,
+      "status": "Generated",
+      "generated_at": "2026-06-19T21:09:02.027205+00:00"
+    },
+    {
+      "evidence_id": "EVID-EVT-PRIV-001",
+      "event_id": "EVT-PRIV-001",
+      "event_type": "privileged_access_request",
+      "identity": "Daniel Kim",
+      "user_principal_name": "daniel.kim@contoso.example",
+      "decision_type": "Privileged Access Request",
+      "risk_level": "High",
+      "access_to_add": [
+        "User Administrator"
+      ],
+      "access_to_remove": [],
+      "approval_required": true,
+      "ticket_created": true,
+      "drift_detected": false,
+      "audit_required": true,
+      "status": "Generated",
+      "generated_at": "2026-06-19T21:09:02.027221+00:00"
+    },
+    {
+      "evidence_id": "EVID-EVT-NHI-001",
+      "event_id": "EVT-NHI-001",
+      "event_type": "non_human_identity_review",
+      "identity": "svc-finance-reporting",
+      "user_principal_name": "svc-finance-reporting@contoso.example",
+      "decision_type": "Access Assignment Plan",
+      "risk_level": "Critical",
+      "access_to_add": [
+        "Application Integration Access",
+        "Automation Scope",
+        "Credential Review Required"
+      ],
+      "access_to_remove": [],
+      "approval_required": true,
+      "ticket_created": true,
+      "drift_detected": false,
+      "audit_required": true,
+      "status": "Generated",
+      "generated_at": "2026-06-19T21:09:02.027265+00:00"
+    }
+  ]
+}
