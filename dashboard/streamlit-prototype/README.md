@@ -10,6 +10,56 @@ The goal is to demonstrate how IdentityOS can move from static architecture docu
 
 ---
 
+## IdentityOS Core Integration
+
+The Streamlit dashboard now connects to IdentityOS Core output.
+
+IdentityOS Core processes sample identity lifecycle events and generates dashboard-ready output for:
+
+* Events processed
+* Tickets created
+* Approvals required
+* Access drift detected
+* Risk counts
+* Event type counts
+* Generated audit evidence paths
+* Generated ticket output paths
+
+The dashboard includes an **IdentityOS Core Output** view that displays the results of the simulated IAM operating system engine.
+
+This connects the dashboard prototype to the working IdentityOS Core event processor.
+
+## Core Output Flow
+
+```text id="uwyytl"
+identityos-core/data/sample-hr-events.json
+        ↓
+identityos-core/engine/process-identity-event.py
+        ↓
+identityos-core/outputs/tickets/tickets.json
+identityos-core/outputs/evidence/audit-evidence.json
+identityos-core/outputs/dashboard/dashboard-output.json
+        ↓
+dashboard/streamlit-prototype/app.py
+```
+
+## Running the Core Processor
+
+Before viewing the IdentityOS Core Output dashboard, run:
+
+```powershell id="oz75k5"
+.\.venv\Scripts\python.exe identityos-core\engine\process-identity-event.py
+```
+
+Then launch the dashboard:
+
+```powershell id="v7f30t"
+.\.venv\Scripts\streamlit.exe run dashboard\streamlit-prototype\app.py
+```
+
+Select **IdentityOS Core Output** from the sidebar.
+
+
 ## Current Prototype Capabilities
 
 The current Streamlit prototype includes:
