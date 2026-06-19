@@ -138,6 +138,7 @@ IdentityOS is organized into architecture documents, reference models, sample da
 | [Automation Health Dashboard](dashboard/automation-health-dashboard.md) | Defines the dashboard view for automation scripts, job status, report generation, failures, manual intervention, evidence outputs, and operational health. |
 | [Audit Evidence Dashboard](dashboard/audit-evidence-dashboard.md) | Defines the dashboard view for audit evidence, policy decisions, approvals, reviews, remediation proof, exception evidence, report evidence, and audit readiness. |
 | [Streamlit Dashboard Prototype](dashboard/streamlit-prototype/README.md) | Provides the first interactive IdentityOS dashboard prototype for executive risk, lifecycle operations, governance, risk scoring, access drift, automation health, and generated reports. |
+| [IdentityOS Operating Model Roadmap](docs/identityos-operating-model-roadmap.md) | Defines how deep IdentityOS is intended to go as a portfolio-grade IAM orchestration prototype, including simulated lifecycle workflows, ticketing concepts, Entra ID lab integration, audit evidence, and dashboard updates. |
 
 
 ### Architecture Documents
