@@ -6,6 +6,9 @@ This folder contains the core architecture and design documentation for Identity
 
 The documents explain the vision, mission, principles, system architecture, lifecycle model, policy model, governance model, and roadmap for the project.
 
+| [IdentityOS Operating Model Roadmap](identityos-operating-model-roadmap.md) | Defines how deep IdentityOS is intended to go as a portfolio-grade IAM orchestration prototype, including simulated lifecycle workflows, ticketing concepts, Entra ID lab integration, audit evidence, and dashboard updates. |
+
+
 ---
 
 ## Documentation Index
