@@ -1216,3 +1216,173 @@ st.info(
     "IdentityOS supports offboarding governance by identifying access removal, account disablement, "
     "session revocation, and audit evidence requirements before access is fully removed."
 )
+# ------------------------------------------------------------
+# Identity Lifecycle Management - Executive Summary
+# ------------------------------------------------------------
+
+st.markdown("---")
+st.header("Identity Lifecycle Executive Summary")
+
+st.markdown(
+    """
+    This section provides an executive-level view of Joiner, Mover, and Leaver
+    activity across IdentityOS. It summarizes lifecycle decisions, high-risk events,
+    manual review volume, and offboarding priority to support IAM governance,
+    audit readiness, and leadership reporting.
+    """
+)
+
+# Safely load lifecycle logs from Streamlit session state
+joiner_audit_log = st.session_state.get("access_decision_audit_log", [])
+mover_audit_log = st.session_state.get("mover_audit_log", [])
+leaver_audit_log = st.session_state.get("leaver_audit_log", [])
+
+joiner_summary_df = pd.DataFrame(joiner_audit_log)
+mover_summary_df = pd.DataFrame(mover_audit_log)
+leaver_summary_df = pd.DataFrame(leaver_audit_log)
+
+
+def count_value(df, column_name, target_value):
+    if column_name in df.columns:
+        return df[df[column_name] == target_value].shape[0]
+    return 0
+
+
+def count_contains(df, column_name, target_text):
+    if column_name in df.columns:
+        return df[df[column_name].astype(str).str.contains(target_text, case=False, na=False)].shape[0]
+    return 0
+
+
+total_joiner_decisions = len(joiner_summary_df)
+total_mover_decisions = len(mover_summary_df)
+total_leaver_decisions = len(leaver_summary_df)
+
+total_lifecycle_events = (
+    total_joiner_decisions
+    + total_mover_decisions
+    + total_leaver_decisions
+)
+
+joiner_high_risk = count_value(joiner_summary_df, "Risk Level", "High")
+mover_high_risk = count_value(mover_summary_df, "New Risk Level", "High")
+leaver_high_risk = count_value(leaver_summary_df, "Leaver Risk Level", "High")
+
+total_high_risk_events = (
+    joiner_high_risk
+    + mover_high_risk
+    + leaver_high_risk
+)
+
+manual_review_count = count_value(
+    joiner_summary_df,
+    "Recommended Access Package",
+    "Manual Review Required"
+)
+
+package_change_count = count_value(
+    mover_summary_df,
+    "Mover Decision",
+    "Access Package Change Required"
+)
+
+immediate_offboarding_count = count_value(
+    leaver_summary_df,
+    "Leaver Priority",
+    "Immediate Offboarding Required"
+)
+
+summary_col1, summary_col2, summary_col3, summary_col4 = st.columns(4)
+
+with summary_col1:
+    st.metric("Total Lifecycle Events", total_lifecycle_events)
+
+with summary_col2:
+    st.metric("High Risk Events", total_high_risk_events)
+
+with summary_col3:
+    st.metric("Manual Reviews", manual_review_count)
+
+with summary_col4:
+    st.metric("Immediate Offboarding", immediate_offboarding_count)
+
+st.write("### Lifecycle Activity Breakdown")
+
+lifecycle_activity_summary = [
+    {
+        "Lifecycle Stage": "Joiner",
+        "Recorded Decisions": total_joiner_decisions,
+        "High Risk Events": joiner_high_risk,
+        "Governance Focus": "Access package recommendation and approval"
+    },
+    {
+        "Lifecycle Stage": "Mover",
+        "Recorded Decisions": total_mover_decisions,
+        "High Risk Events": mover_high_risk,
+        "Governance Focus": "Access change review and access creep prevention"
+    },
+    {
+        "Lifecycle Stage": "Leaver",
+        "Recorded Decisions": total_leaver_decisions,
+        "High Risk Events": leaver_high_risk,
+        "Governance Focus": "Access removal, session revocation, and account disablement"
+    }
+]
+
+lifecycle_activity_df = pd.DataFrame(lifecycle_activity_summary)
+
+st.dataframe(lifecycle_activity_df, use_container_width=True)
+
+if total_lifecycle_events > 0:
+    lifecycle_chart = px.bar(
+        lifecycle_activity_df,
+        x="Lifecycle Stage",
+        y="Recorded Decisions",
+        color="Lifecycle Stage",
+        title="Recorded Identity Lifecycle Decisions"
+    )
+
+    st.plotly_chart(lifecycle_chart, use_container_width=True)
+
+    high_risk_chart = px.bar(
+        lifecycle_activity_df,
+        x="Lifecycle Stage",
+        y="High Risk Events",
+        color="Lifecycle Stage",
+        title="High Risk Identity Lifecycle Events"
+    )
+
+    st.plotly_chart(high_risk_chart, use_container_width=True)
+else:
+    st.warning(
+        "No lifecycle decisions have been recorded yet. Record Joiner, Mover, or Leaver "
+        "decisions to populate the executive summary."
+    )
+
+st.write("### Governance Interpretation")
+
+if total_lifecycle_events == 0:
+    st.info(
+        "IdentityOS is ready to summarize lifecycle activity once access decisions are recorded."
+    )
+elif total_high_risk_events == 0 and immediate_offboarding_count == 0:
+    st.success(
+        "Current lifecycle activity shows no high-risk events or immediate offboarding cases. "
+        "Standard governance workflows appear sufficient for the recorded activity."
+    )
+elif total_high_risk_events > 0 and immediate_offboarding_count == 0:
+    st.warning(
+        "High-risk lifecycle events have been recorded. Security or IAM leadership review "
+        "should validate approval workflows and access decisions."
+    )
+else:
+    st.error(
+        "Immediate offboarding activity has been recorded. Security, IAM, and HR should ensure "
+        "account disablement, access removal, session revocation, and evidence retention are complete."
+    )
+
+st.info(
+    "Executive IAM Note: This summary gives leadership a consolidated view of identity lifecycle "
+    "risk across Joiner, Mover, and Leaver workflows. In a production environment, these metrics "
+    "could be connected to HR systems, ticketing platforms, identity governance tools, and SIEM reporting."
+)
