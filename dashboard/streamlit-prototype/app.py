@@ -853,3 +853,187 @@ st.info(
     "help security teams investigate provisioning activity, and support access "
     "review programs by showing why access was recommended or withheld."
 )
+# ------------------------------------------------------------
+# Identity Lifecycle Management - Mover Workflow Engine
+# ------------------------------------------------------------
+
+st.markdown("---")
+st.subheader("Mover Workflow Engine")
+
+st.markdown(
+    """
+    This section simulates how IdentityOS evaluates employee movement between
+    departments or job roles. The engine compares the employee's current access
+    package against the recommended future-state access package and identifies
+    whether access should be retained, removed, added, or reviewed.
+    """
+)
+
+from datetime import datetime
+
+mover_col1, mover_col2 = st.columns(2)
+
+with mover_col1:
+    st.write("### Current Identity Attributes")
+
+    current_department = st.selectbox(
+        "Current Department",
+        ["HR", "Finance", "Security", "IT", "Executives", "Legal", "Operations"],
+        key="current_department_select"
+    )
+
+    current_job_title = st.selectbox(
+        "Current Job Title",
+        [
+            "HR Specialist",
+            "Finance Analyst",
+            "Security Analyst",
+            "IT Support Technician",
+            "Executive Assistant",
+            "Legal Analyst",
+            "Operations Coordinator"
+        ],
+        key="current_job_title_select"
+    )
+
+with mover_col2:
+    st.write("### New Identity Attributes")
+
+    new_department = st.selectbox(
+        "New Department",
+        ["HR", "Finance", "Security", "IT", "Executives", "Legal", "Operations"],
+        key="new_department_select"
+    )
+
+    new_job_title = st.selectbox(
+        "New Job Title",
+        [
+            "HR Specialist",
+            "Finance Analyst",
+            "Security Analyst",
+            "IT Support Technician",
+            "Executive Assistant",
+            "Legal Analyst",
+            "Operations Coordinator"
+        ],
+        key="new_job_title_select"
+    )
+
+current_access = recommend_access_package(current_department, current_job_title)
+new_access = recommend_access_package(new_department, new_job_title)
+
+current_package = current_access["Access Package"]
+new_package = new_access["Access Package"]
+
+st.write("### Mover Access Evaluation")
+
+mover_decision_col1, mover_decision_col2, mover_decision_col3 = st.columns(3)
+
+with mover_decision_col1:
+    st.metric("Current Access Package", current_package)
+
+with mover_decision_col2:
+    st.metric("New Access Package", new_package)
+
+with mover_decision_col3:
+    st.metric("New Risk Level", new_access["Risk Level"])
+
+if current_package == new_package:
+    mover_decision = "No Access Package Change Required"
+    mover_action = "Retain current access package"
+    mover_risk = new_access["Risk Level"]
+else:
+    mover_decision = "Access Package Change Required"
+    mover_action = (
+        f"Remove '{current_package}' and assign '{new_package}' "
+        f"after approval workflow: {new_access['Approval Workflow']}"
+    )
+    mover_risk = new_access["Risk Level"]
+
+st.success(f"Mover Decision: {mover_decision}")
+st.info(f"Recommended Action: {mover_action}")
+
+mover_change_summary = [
+    {
+        "Access Control Area": "Current Access Package",
+        "Current State": current_package,
+        "Future State": "Remove" if current_package != new_package else "Retain",
+        "Action Required": "Review removal" if current_package != new_package else "No change"
+    },
+    {
+        "Access Control Area": "New Access Package",
+        "Current State": "Not assigned" if current_package != new_package else current_package,
+        "Future State": new_package,
+        "Action Required": "Assign after approval" if current_package != new_package else "No change"
+    },
+    {
+        "Access Control Area": "Approval Workflow",
+        "Current State": current_access["Approval Workflow"],
+        "Future State": new_access["Approval Workflow"],
+        "Action Required": "Route to new approver" if current_package != new_package else "No change"
+    },
+    {
+        "Access Control Area": "Risk Level",
+        "Current State": current_access["Risk Level"],
+        "Future State": new_access["Risk Level"],
+        "Action Required": "Security review required" if new_access["Risk Level"] == "High" else "Standard review"
+    }
+]
+
+mover_change_df = pd.DataFrame(mover_change_summary)
+
+st.dataframe(mover_change_df, use_container_width=True)
+
+if "mover_audit_log" not in st.session_state:
+    st.session_state.mover_audit_log = []
+
+if st.button("Record Mover Decision"):
+    mover_audit_entry = {
+        "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "Current Department": current_department,
+        "Current Job Title": current_job_title,
+        "New Department": new_department,
+        "New Job Title": new_job_title,
+        "Current Access Package": current_package,
+        "New Access Package": new_package,
+        "Mover Decision": mover_decision,
+        "Recommended Action": mover_action,
+        "New Risk Level": mover_risk,
+        "Decision Source": "IdentityOS Mover Workflow Engine"
+    }
+
+    st.session_state.mover_audit_log.append(mover_audit_entry)
+    st.success("Mover decision recorded in the audit log.")
+
+if st.session_state.mover_audit_log:
+    st.write("### Mover Decision Audit Log")
+
+    mover_audit_df = pd.DataFrame(st.session_state.mover_audit_log)
+    st.dataframe(mover_audit_df, use_container_width=True)
+
+    total_mover_decisions = len(mover_audit_df)
+
+    package_change_count = mover_audit_df[
+        mover_audit_df["Mover Decision"] == "Access Package Change Required"
+    ].shape[0]
+
+    high_risk_mover_count = mover_audit_df[
+        mover_audit_df["New Risk Level"] == "High"
+    ].shape[0]
+
+    mover_metric_col1, mover_metric_col2, mover_metric_col3 = st.columns(3)
+
+    with mover_metric_col1:
+        st.metric("Mover Decisions", total_mover_decisions)
+
+    with mover_metric_col2:
+        st.metric("Package Changes", package_change_count)
+
+    with mover_metric_col3:
+        st.metric("High Risk Moves", high_risk_mover_count)
+
+st.info(
+    "IAM Architecture Note: Mover workflows are critical because access should not simply "
+    "accumulate as employees change roles. IdentityOS compares current access to future-state "
+    "access so outdated permissions can be removed and new access can be approved through governance."
+)
