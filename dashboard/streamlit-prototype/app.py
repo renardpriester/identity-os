@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict
 
@@ -12,7 +13,17 @@ REPORTS_DIR = ROOT_DIR / "reports"
 CORE_DASHBOARD_OUTPUT_PATH = (
     ROOT_DIR / "identityos-core" / "outputs" / "dashboard" / "dashboard-output.json"
 )
+IDENTITYOS_STATE_DIR = ROOT_DIR / "identityos-state"
 
+IDENTITYOS_STATE_FILES = {
+    "hr_identity_intake_queue": IDENTITYOS_STATE_DIR / "hr-identity-intake-queue.json",
+    "approval_queue": IDENTITYOS_STATE_DIR / "approval-queue.json",
+    "provisioning_history": IDENTITYOS_STATE_DIR / "provisioning-history.json",
+    "access_decision_audit_log": IDENTITYOS_STATE_DIR / "joiner-access-decision-audit-log.json",
+    "mover_audit_log": IDENTITYOS_STATE_DIR / "mover-audit-log.json",
+    "leaver_audit_log": IDENTITYOS_STATE_DIR / "leaver-audit-log.json",
+    "identityos_persistence_events": IDENTITYOS_STATE_DIR / "persistence-events.json",
+}
 st.set_page_config(
     page_title="IdentityOS Dashboard Prototype",
     page_icon="🛡️",
@@ -30,7 +41,73 @@ def load_optional_json(path: Path) -> Dict[str, Any]:
         return {}
 
     return load_json(path)
+def load_json(path: Path) -> Dict[str, Any]:
+    """Load a JSON file and return a dictionary."""
+    with path.open("r", encoding="utf-8") as file:
+        return json.load(file)
 
+
+def load_optional_json(path: Path) -> Dict[str, Any]:
+    """Load a JSON file if it exists. Return an empty dictionary if missing."""
+    if not path.exists():
+        return {}
+
+    return load_json(path)
+
+
+def load_state_file(path: Path):
+    """Load a persisted IdentityOS state file from disk."""
+    if not path.exists():
+        return []
+
+    try:
+        with path.open("r", encoding="utf-8") as file:
+            data = json.load(file)
+
+        if isinstance(data, list):
+            return data
+
+        return []
+
+    except (json.JSONDecodeError, OSError):
+        return []
+
+
+def save_state_file(path: Path, records):
+    """Save IdentityOS state records to disk as JSON."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    with path.open("w", encoding="utf-8") as file:
+        json.dump(records, file, indent=4)
+
+
+def load_identityos_state_from_disk():
+    """Load all persisted IdentityOS workflow records into Streamlit session state."""
+    for state_key, state_path in IDENTITYOS_STATE_FILES.items():
+        if state_key not in st.session_state:
+            st.session_state[state_key] = load_state_file(state_path)
+
+
+def save_identityos_state_to_disk():
+    """Save all IdentityOS workflow records from Streamlit session state to disk."""
+    for state_key, state_path in IDENTITYOS_STATE_FILES.items():
+        records = st.session_state.get(state_key, [])
+        save_state_file(state_path, records)
+
+
+def record_persistence_event(event_type, event_details):
+    """Record save/load activity for audit visibility."""
+    if "identityos_persistence_events" not in st.session_state:
+        st.session_state.identityos_persistence_events = []
+
+    st.session_state.identityos_persistence_events.append(
+        {
+            "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "Event Type": event_type,
+            "Event Details": event_details,
+            "Decision Source": "IdentityOS Data Persistence Layer"
+        }
+    )
 def clean_label(value: str) -> str:
     """Convert snake_case keys into readable dashboard labels."""
     return value.replace("_", " ").title()
@@ -175,7 +252,9 @@ st.sidebar.markdown(
 - Audit evidence
 """
 )
-
+if "identityos_state_loaded_from_disk" not in st.session_state:
+    load_identityos_state_from_disk()
+    st.session_state.identityos_state_loaded_from_disk = True
 st.title("IdentityOS Dashboard Prototype")
 st.caption(
     "Interactive IAM dashboard prototype for lifecycle operations, governance, "
@@ -2445,4 +2524,123 @@ st.info(
     "view of identity risk, operational workload, approval health, provisioning outcomes, and "
     "audit evidence. In a production environment, this could support IAM leadership reporting, "
     "audit readiness, access review programs, and security operations handoffs."
+)
+# ------------------------------------------------------------
+# IdentityOS - Data Persistence Layer
+# ------------------------------------------------------------
+
+st.markdown("---")
+st.header("IdentityOS Data Persistence Layer")
+
+st.markdown(
+    """
+    This section manages local JSON persistence for IdentityOS workflow data.
+    It allows HR intakes, approval tickets, provisioning history, lifecycle audit
+    logs, and persistence events to survive application restarts.
+    """
+)
+
+st.write("### Persistence Storage Location")
+
+st.code(str(IDENTITYOS_STATE_DIR), language="text")
+
+persistence_summary = []
+
+for state_key, state_path in IDENTITYOS_STATE_FILES.items():
+    records = st.session_state.get(state_key, [])
+
+    persistence_summary.append(
+        {
+            "State Object": state_key,
+            "Record Count": len(records),
+            "Storage File": str(state_path.name),
+            "File Exists": "Yes" if state_path.exists() else "No"
+        }
+    )
+
+persistence_summary_df = pd.DataFrame(persistence_summary)
+
+st.write("### Persisted IdentityOS State Objects")
+st.dataframe(persistence_summary_df, use_container_width=True)
+
+persist_metric_col1, persist_metric_col2, persist_metric_col3 = st.columns(3)
+
+with persist_metric_col1:
+    total_persisted_records = persistence_summary_df["Record Count"].sum()
+    st.metric("Total Workflow Records", int(total_persisted_records))
+
+with persist_metric_col2:
+    existing_file_count = persistence_summary_df[
+        persistence_summary_df["File Exists"] == "Yes"
+    ].shape[0]
+    st.metric("State Files Created", existing_file_count)
+
+with persist_metric_col3:
+    tracked_state_count = len(IDENTITYOS_STATE_FILES)
+    st.metric("Tracked State Objects", tracked_state_count)
+
+st.write("### Persistence Actions")
+
+persist_action_col1, persist_action_col2 = st.columns(2)
+
+with persist_action_col1:
+    if st.button("Save IdentityOS State to Disk"):
+        record_persistence_event(
+            "Save",
+            "IdentityOS workflow state saved to local JSON files."
+        )
+
+        save_identityos_state_to_disk()
+
+        st.success("IdentityOS state saved to disk.")
+
+with persist_action_col2:
+    if st.button("Reload IdentityOS State from Disk"):
+        for state_key, state_path in IDENTITYOS_STATE_FILES.items():
+            st.session_state[state_key] = load_state_file(state_path)
+
+        record_persistence_event(
+            "Load",
+            "IdentityOS workflow state reloaded from local JSON files."
+        )
+
+        save_identityos_state_to_disk()
+
+        st.success("IdentityOS state reloaded from disk.")
+
+st.write("### Persistence Event Log")
+
+if st.session_state.get("identityos_persistence_events", []):
+    persistence_events_df = pd.DataFrame(
+        st.session_state.identityos_persistence_events
+    )
+
+    st.dataframe(persistence_events_df, use_container_width=True)
+
+    persistence_event_summary = (
+        persistence_events_df.groupby("Event Type")
+        .size()
+        .reset_index(name="Event Count")
+    )
+
+    st.write("### Persistence Events by Type")
+    st.dataframe(persistence_event_summary, use_container_width=True)
+
+    persistence_event_chart = px.bar(
+        persistence_event_summary,
+        x="Event Type",
+        y="Event Count",
+        title="IdentityOS Persistence Events"
+    )
+
+    st.plotly_chart(persistence_event_chart, use_container_width=True)
+
+else:
+    st.warning("No persistence events have been recorded yet.")
+
+st.info(
+    "IAM Platform Note: The Data Persistence Layer moves IdentityOS closer to operating "
+    "system behavior by retaining workflow records across application restarts. In a production "
+    "environment, this layer could be replaced with a database such as PostgreSQL, Azure SQL, "
+    "Cosmos DB, or another enterprise data store."
 )
