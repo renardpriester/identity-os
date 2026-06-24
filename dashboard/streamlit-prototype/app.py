@@ -260,6 +260,31 @@ if "identityos_state_loaded_from_disk" not in st.session_state:
 
 
 st.markdown("---")
+# ------------------------------------------------------------
+# IdentityOS - System Status Banner
+# ------------------------------------------------------------
+
+status_col1, status_col2, status_col3, status_col4 = st.columns(4)
+
+with status_col1:
+    st.metric("System Status", "Operational")
+
+with status_col2:
+    st.metric("Workflow Engine", "Online")
+
+with status_col3:
+    persistence_status = "Enabled" if IDENTITYOS_STATE_DIR.exists() else "Ready"
+    st.metric("Persistence", persistence_status)
+
+with status_col4:
+    st.metric("Governance Mode", "Active")
+
+st.success(
+    "IdentityOS v0.2 is running with HR Intake, JML workflows, approval queue, "
+    "provisioning actions, governance scoring, audit evidence, and local persistence."
+)
+
+st.markdown("---")
 
 header_col1, header_col2 = st.columns([1, 5])
 
