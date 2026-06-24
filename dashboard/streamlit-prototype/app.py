@@ -1386,3 +1386,214 @@ st.info(
     "risk across Joiner, Mover, and Leaver workflows. In a production environment, these metrics "
     "could be connected to HR systems, ticketing platforms, identity governance tools, and SIEM reporting."
 )
+# ------------------------------------------------------------
+# IdentityOS - Approval Queue and Ticketing Simulation
+# ------------------------------------------------------------
+
+st.markdown("---")
+st.header("IdentityOS Approval Queue")
+
+st.markdown(
+    """
+    This section simulates how IdentityOS turns identity lifecycle decisions into
+    approval tickets. Tickets can be generated from Joiner, Mover, and Leaver
+    workflows, assigned to the correct approver, and tracked through approval
+    and provisioning status.
+    """
+)
+
+from datetime import datetime
+
+if "approval_queue" not in st.session_state:
+    st.session_state.approval_queue = []
+
+
+def create_ticket_id():
+    return f"IAM-{datetime.now().strftime('%Y%m%d%H%M%S')}-{len(st.session_state.approval_queue) + 1}"
+
+
+def add_approval_ticket(
+    lifecycle_stage,
+    employee,
+    request_type,
+    access_package,
+    approval_owner,
+    risk_level,
+    recommended_action,
+):
+    ticket = {
+        "Ticket ID": create_ticket_id(),
+        "Created": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "Lifecycle Stage": lifecycle_stage,
+        "Employee": employee,
+        "Request Type": request_type,
+        "Access Package / Control": access_package,
+        "Approval Owner": approval_owner,
+        "Risk Level": risk_level,
+        "Recommended Action": recommended_action,
+        "Ticket Status": "Pending Approval",
+        "Provisioning Status": "Not Started",
+        "Decision Source": "IdentityOS Workflow Engine"
+    }
+
+    st.session_state.approval_queue.append(ticket)
+
+
+st.write("### Generate Approval Tickets")
+
+ticket_col1, ticket_col2, ticket_col3 = st.columns(3)
+
+with ticket_col1:
+    if st.button("Create Joiner Approval Ticket"):
+        joiner_employee = f"{selected_department} New Hire"
+
+        add_approval_ticket(
+            lifecycle_stage="Joiner",
+            employee=joiner_employee,
+            request_type="New Access Package Request",
+            access_package=recommendation["Access Package"],
+            approval_owner=recommendation["Approval Workflow"],
+            risk_level=recommendation["Risk Level"],
+            recommended_action=recommendation["Provisioning Action"],
+        )
+
+        st.success("Joiner approval ticket created.")
+
+with ticket_col2:
+    if st.button("Create Mover Approval Ticket"):
+        mover_employee = f"{current_department} to {new_department} Employee"
+
+        add_approval_ticket(
+            lifecycle_stage="Mover",
+            employee=mover_employee,
+            request_type="Access Change Request",
+            access_package=new_package,
+            approval_owner=new_access["Approval Workflow"],
+            risk_level=mover_risk,
+            recommended_action=mover_action,
+        )
+
+        st.success("Mover approval ticket created.")
+
+with ticket_col3:
+    if st.button("Create Leaver Offboarding Ticket"):
+        add_approval_ticket(
+            lifecycle_stage="Leaver",
+            employee=leaver_name,
+            request_type="Offboarding Control Request",
+            access_package=leaver_access["Access Package"],
+            approval_owner="HR + IAM + Security",
+            risk_level=leaver_risk_level,
+            recommended_action=leaver_action,
+        )
+
+        st.success("Leaver offboarding ticket created.")
+
+
+if st.session_state.approval_queue:
+    approval_queue_df = pd.DataFrame(st.session_state.approval_queue)
+
+    st.write("### Active Approval Queue")
+    st.dataframe(approval_queue_df, use_container_width=True)
+
+    open_ticket_count = approval_queue_df[
+        approval_queue_df["Ticket Status"].isin(["Pending Approval", "Approved"])
+    ].shape[0]
+
+    approved_ticket_count = approval_queue_df[
+        approval_queue_df["Ticket Status"] == "Approved"
+    ].shape[0]
+
+    high_risk_ticket_count = approval_queue_df[
+        approval_queue_df["Risk Level"] == "High"
+    ].shape[0]
+
+    provisioning_ready_count = approval_queue_df[
+        approval_queue_df["Provisioning Status"] == "Ready for Provisioning"
+    ].shape[0]
+
+    queue_metric_col1, queue_metric_col2, queue_metric_col3, queue_metric_col4 = st.columns(4)
+
+    with queue_metric_col1:
+        st.metric("Open Tickets", open_ticket_count)
+
+    with queue_metric_col2:
+        st.metric("Approved Tickets", approved_ticket_count)
+
+    with queue_metric_col3:
+        st.metric("High Risk Tickets", high_risk_ticket_count)
+
+    with queue_metric_col4:
+        st.metric("Ready for Provisioning", provisioning_ready_count)
+
+    st.write("### Update Ticket Status")
+
+    selected_ticket_id = st.selectbox(
+        "Select Ticket",
+        approval_queue_df["Ticket ID"].tolist(),
+        key="approval_ticket_select"
+    )
+
+    selected_ticket_status = st.selectbox(
+        "Ticket Status",
+        [
+            "Pending Approval",
+            "Approved",
+            "Denied",
+            "Provisioning Ready",
+            "Provisioned",
+            "Closed"
+        ],
+        key="approval_ticket_status_select"
+    )
+
+    selected_provisioning_status = st.selectbox(
+        "Provisioning Status",
+        [
+            "Not Started",
+            "Ready for Provisioning",
+            "Provisioning In Progress",
+            "Provisioned",
+            "Access Removed",
+            "Blocked"
+        ],
+        key="approval_provisioning_status_select"
+    )
+
+    if st.button("Update Selected Ticket"):
+        for ticket in st.session_state.approval_queue:
+            if ticket["Ticket ID"] == selected_ticket_id:
+                ticket["Ticket Status"] = selected_ticket_status
+                ticket["Provisioning Status"] = selected_provisioning_status
+
+        st.success(f"Ticket {selected_ticket_id} updated.")
+
+    st.write("### Approval Queue Risk Breakdown")
+
+    approval_risk_summary = (
+        approval_queue_df.groupby(["Lifecycle Stage", "Risk Level"])
+        .size()
+        .reset_index(name="Ticket Count")
+    )
+
+    st.dataframe(approval_risk_summary, use_container_width=True)
+
+    approval_risk_chart = px.bar(
+        approval_risk_summary,
+        x="Lifecycle Stage",
+        y="Ticket Count",
+        color="Risk Level",
+        title="Approval Tickets by Lifecycle Stage and Risk Level"
+    )
+
+    st.plotly_chart(approval_risk_chart, use_container_width=True)
+
+else:
+    st.warning("No approval tickets have been created yet.")
+
+st.info(
+    "IAM Workflow Note: This approval queue represents the bridge between identity lifecycle "
+    "decisions and operational execution. In a production environment, IdentityOS could send "
+    "these tickets to ServiceNow, Jira, Freshservice, Microsoft Graph workflows, or another "
+    "enterprise ticketing and approval platform."
+)
