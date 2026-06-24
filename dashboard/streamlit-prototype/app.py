@@ -1856,3 +1856,214 @@ st.info(
     "Entra ID, HRIS workflows, ticketing APIs, or identity governance platforms to create users, "
     "assign groups, remove access, disable accounts, and revoke sessions."
 )
+# ------------------------------------------------------------
+# IdentityOS - HR Identity Intake Portal
+# ------------------------------------------------------------
+
+st.markdown("---")
+st.header("HR Identity Intake Portal")
+
+st.markdown(
+    """
+    This section simulates the HR front door for IdentityOS. HR can submit new hire
+    identity details, and IdentityOS will evaluate workforce attributes to recommend
+    the correct access package, approval workflow, risk level, and provisioning action.
+    """
+)
+
+if "hr_identity_intake_queue" not in st.session_state:
+    st.session_state.hr_identity_intake_queue = []
+
+
+def create_intake_id():
+    return f"HR-{datetime.now().strftime('%Y%m%d%H%M%S')}-{len(st.session_state.hr_identity_intake_queue) + 1}"
+
+
+st.write("### Submit New Hire Identity Intake")
+
+with st.form("hr_identity_intake_form"):
+    intake_col1, intake_col2 = st.columns(2)
+
+    with intake_col1:
+        new_hire_name = st.text_input(
+            "New Hire Name",
+            value="Jordan Williams",
+            key="hr_intake_new_hire_name"
+        )
+
+        new_hire_department = st.selectbox(
+            "Department",
+            ["HR", "Finance", "Security", "IT", "Executives", "Legal", "Operations"],
+            key="hr_intake_department"
+        )
+
+        new_hire_job_title = st.selectbox(
+            "Job Title",
+            [
+                "HR Specialist",
+                "Finance Analyst",
+                "Security Analyst",
+                "IT Support Technician",
+                "Executive Assistant",
+                "Legal Analyst",
+                "Operations Coordinator"
+            ],
+            key="hr_intake_job_title"
+        )
+
+    with intake_col2:
+        new_hire_location = st.selectbox(
+            "Location",
+            ["Orlando", "Miami", "Remote", "New York", "Atlanta", "Dallas"],
+            key="hr_intake_location"
+        )
+
+        employment_type = st.selectbox(
+            "Employment Type",
+            ["Full-Time", "Part-Time", "Contractor", "Intern"],
+            key="hr_intake_employment_type"
+        )
+
+        start_date = st.date_input(
+            "Start Date",
+            key="hr_intake_start_date"
+        )
+
+    submit_intake = st.form_submit_button("Submit HR Intake")
+
+if submit_intake:
+    intake_recommendation = recommend_access_package(
+        new_hire_department,
+        new_hire_job_title
+    )
+
+    intake_record = {
+        "Intake ID": create_intake_id(),
+        "Submitted": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "New Hire Name": new_hire_name,
+        "Department": new_hire_department,
+        "Job Title": new_hire_job_title,
+        "Location": new_hire_location,
+        "Employment Type": employment_type,
+        "Start Date": str(start_date),
+        "Recommended Access Package": intake_recommendation["Access Package"],
+        "Approval Workflow": intake_recommendation["Approval Workflow"],
+        "Risk Level": intake_recommendation["Risk Level"],
+        "Provisioning Action": intake_recommendation["Provisioning Action"],
+        "Intake Status": "Submitted",
+        "Ticket Created": "No"
+    }
+
+    st.session_state.hr_identity_intake_queue.append(intake_record)
+
+    st.success(
+        f"HR intake submitted for {new_hire_name}. "
+        f"Recommended package: {intake_recommendation['Access Package']}."
+    )
+
+
+if st.session_state.hr_identity_intake_queue:
+    st.write("### HR Intake Queue")
+
+    hr_intake_df = pd.DataFrame(st.session_state.hr_identity_intake_queue)
+    st.dataframe(hr_intake_df, use_container_width=True)
+
+    intake_metric_col1, intake_metric_col2, intake_metric_col3, intake_metric_col4 = st.columns(4)
+
+    with intake_metric_col1:
+        st.metric("Total Intakes", len(hr_intake_df))
+
+    with intake_metric_col2:
+        high_risk_intakes = hr_intake_df[
+            hr_intake_df["Risk Level"] == "High"
+        ].shape[0]
+        st.metric("High Risk Intakes", high_risk_intakes)
+
+    with intake_metric_col3:
+        manual_review_intakes = hr_intake_df[
+            hr_intake_df["Recommended Access Package"] == "Manual Review Required"
+        ].shape[0]
+        st.metric("Manual Reviews", manual_review_intakes)
+
+    with intake_metric_col4:
+        tickets_created_count = hr_intake_df[
+            hr_intake_df["Ticket Created"] == "Yes"
+        ].shape[0]
+        st.metric("Tickets Created", tickets_created_count)
+
+    st.write("### Generate Approval Ticket from HR Intake")
+
+    selected_intake_id = st.selectbox(
+        "Select HR Intake",
+        hr_intake_df["Intake ID"].tolist(),
+        key="hr_intake_ticket_select"
+    )
+
+    selected_intake = hr_intake_df[
+        hr_intake_df["Intake ID"] == selected_intake_id
+    ].iloc[0]
+
+    selected_intake_col1, selected_intake_col2, selected_intake_col3 = st.columns(3)
+
+    with selected_intake_col1:
+        st.metric("New Hire", selected_intake["New Hire Name"])
+
+    with selected_intake_col2:
+        st.metric("Recommended Package", selected_intake["Recommended Access Package"])
+
+    with selected_intake_col3:
+        st.metric("Risk Level", selected_intake["Risk Level"])
+
+    st.info(f"Approval Workflow: {selected_intake['Approval Workflow']}")
+    st.info(f"Provisioning Action: {selected_intake['Provisioning Action']}")
+
+    if st.button("Create Approval Ticket from HR Intake"):
+        add_approval_ticket(
+            lifecycle_stage="Joiner",
+            employee=selected_intake["New Hire Name"],
+            request_type="HR New Hire Access Request",
+            access_package=selected_intake["Recommended Access Package"],
+            approval_owner=selected_intake["Approval Workflow"],
+            risk_level=selected_intake["Risk Level"],
+            recommended_action=selected_intake["Provisioning Action"],
+        )
+
+        for intake in st.session_state.hr_identity_intake_queue:
+            if intake["Intake ID"] == selected_intake_id:
+                intake["Ticket Created"] = "Yes"
+                intake["Intake Status"] = "Approval Ticket Created"
+
+        st.success(
+            f"Approval ticket created for {selected_intake['New Hire Name']}."
+        )
+
+    st.write("### HR Intake Risk Breakdown")
+
+    hr_intake_risk_summary = (
+        hr_intake_df.groupby(["Department", "Risk Level"])
+        .size()
+        .reset_index(name="Intake Count")
+    )
+
+    st.dataframe(hr_intake_risk_summary, use_container_width=True)
+
+    hr_intake_risk_chart = px.bar(
+        hr_intake_risk_summary,
+        x="Department",
+        y="Intake Count",
+        color="Risk Level",
+        title="HR Identity Intakes by Department and Risk Level"
+    )
+
+    st.plotly_chart(hr_intake_risk_chart, use_container_width=True)
+
+else:
+    st.warning("No HR identity intakes have been submitted yet.")
+
+st.info(
+    "IAM Operating Model Note: The HR Identity Intake Portal represents the front door "
+    "of the Joiner lifecycle. In a production IdentityOS environment, this intake could "
+    "come directly from an HRIS platform such as Workday, SAP SuccessFactors, BambooHR, "
+    "or another source of truth. IdentityOS would then evaluate user attributes, recommend "
+    "access, create approval tickets, and trigger provisioning workflows."
+)
