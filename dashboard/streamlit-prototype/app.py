@@ -1597,3 +1597,262 @@ st.info(
     "these tickets to ServiceNow, Jira, Freshservice, Microsoft Graph workflows, or another "
     "enterprise ticketing and approval platform."
 )
+# ------------------------------------------------------------
+# IdentityOS - Provisioning Action Center
+# ------------------------------------------------------------
+
+st.markdown("---")
+st.header("IdentityOS Provisioning Action Center")
+
+st.markdown(
+    """
+    This section simulates how IdentityOS executes approved IAM workflow actions.
+    Once an approval ticket is approved and marked ready for provisioning, the
+    Provisioning Action Center identifies the required access action, tracks the
+    execution result, and records provisioning evidence.
+    """
+)
+
+from datetime import datetime
+
+if "provisioning_history" not in st.session_state:
+    st.session_state.provisioning_history = []
+
+approval_queue = st.session_state.get("approval_queue", [])
+
+if approval_queue:
+    provisioning_queue_df = pd.DataFrame(approval_queue)
+
+    ready_for_provisioning_df = provisioning_queue_df[
+        (
+            provisioning_queue_df["Ticket Status"].isin(
+                ["Approved", "Provisioning Ready"]
+            )
+        )
+        | (
+            provisioning_queue_df["Provisioning Status"].isin(
+                ["Ready for Provisioning", "Provisioning In Progress"]
+            )
+        )
+    ]
+
+    provisioning_col1, provisioning_col2, provisioning_col3 = st.columns(3)
+
+    with provisioning_col1:
+        st.metric("Total Tickets", len(provisioning_queue_df))
+
+    with provisioning_col2:
+        st.metric("Ready for Provisioning", len(ready_for_provisioning_df))
+
+    with provisioning_col3:
+        high_risk_ready_count = ready_for_provisioning_df[
+            ready_for_provisioning_df["Risk Level"] == "High"
+        ].shape[0]
+        st.metric("High Risk Ready Items", high_risk_ready_count)
+
+    if not ready_for_provisioning_df.empty:
+        st.write("### Provisioning-Ready Tickets")
+
+        st.dataframe(ready_for_provisioning_df, use_container_width=True)
+
+        selected_provisioning_ticket_id = st.selectbox(
+            "Select Ticket for Provisioning",
+            ready_for_provisioning_df["Ticket ID"].tolist(),
+            key="provisioning_ticket_select"
+        )
+
+        selected_ticket = ready_for_provisioning_df[
+            ready_for_provisioning_df["Ticket ID"] == selected_provisioning_ticket_id
+        ].iloc[0]
+
+        lifecycle_stage = selected_ticket["Lifecycle Stage"]
+        request_type = selected_ticket["Request Type"]
+        employee = selected_ticket["Employee"]
+        access_package = selected_ticket["Access Package / Control"]
+        risk_level = selected_ticket["Risk Level"]
+        recommended_action = selected_ticket["Recommended Action"]
+
+        st.write("### Selected Provisioning Request")
+
+        selected_col1, selected_col2, selected_col3 = st.columns(3)
+
+        with selected_col1:
+            st.metric("Lifecycle Stage", lifecycle_stage)
+
+        with selected_col2:
+            st.metric("Risk Level", risk_level)
+
+        with selected_col3:
+            st.metric("Current Status", selected_ticket["Provisioning Status"])
+
+        st.info(f"Recommended Action: {recommended_action}")
+
+        if lifecycle_stage == "Joiner":
+            provisioning_steps = [
+                "Create user account",
+                f"Assign access package: {access_package}",
+                "Assign required security groups",
+                "Apply baseline Conditional Access policies",
+                "Send onboarding completion evidence to audit log"
+            ]
+            final_status = "Provisioned"
+
+        elif lifecycle_stage == "Mover":
+            provisioning_steps = [
+                "Remove outdated access package",
+                f"Assign new access package: {access_package}",
+                "Update department and role-based group memberships",
+                "Validate access change approval",
+                "Record mover provisioning evidence"
+            ]
+            final_status = "Provisioned"
+
+        elif lifecycle_stage == "Leaver":
+            provisioning_steps = [
+                "Disable user account",
+                f"Remove access package/control: {access_package}",
+                "Remove security and application group memberships",
+                "Revoke active sessions and refresh tokens",
+                "Record offboarding evidence for audit"
+            ]
+            final_status = "Access Removed"
+
+        else:
+            provisioning_steps = [
+                "Manual IAM review required",
+                "Validate ticket details",
+                "Determine correct provisioning action",
+                "Record manual decision evidence"
+            ]
+            final_status = "Manual Review Required"
+
+        provisioning_steps_df = pd.DataFrame(
+            [
+                {
+                    "Step Number": index + 1,
+                    "Provisioning Step": step,
+                    "Execution Status": "Pending"
+                }
+                for index, step in enumerate(provisioning_steps)
+            ]
+        )
+
+        st.write("### Required Provisioning Steps")
+        st.dataframe(provisioning_steps_df, use_container_width=True)
+
+        execution_result = st.selectbox(
+            "Provisioning Execution Result",
+            [
+                "Successful",
+                "Partially Completed",
+                "Failed",
+                "Requires Manual Review"
+            ],
+            key="provisioning_execution_result"
+        )
+
+        execution_notes = st.text_area(
+            "Provisioning Notes",
+            value="Provisioning action executed in IdentityOS simulation.",
+            key="provisioning_execution_notes"
+        )
+
+        if st.button("Execute Provisioning Action"):
+            provisioning_record = {
+                "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "Ticket ID": selected_provisioning_ticket_id,
+                "Lifecycle Stage": lifecycle_stage,
+                "Employee": employee,
+                "Access Package / Control": access_package,
+                "Risk Level": risk_level,
+                "Execution Result": execution_result,
+                "Final Provisioning Status": final_status if execution_result == "Successful" else execution_result,
+                "Provisioning Notes": execution_notes,
+                "Decision Source": "IdentityOS Provisioning Action Center"
+            }
+
+            st.session_state.provisioning_history.append(provisioning_record)
+
+            for ticket in st.session_state.approval_queue:
+                if ticket["Ticket ID"] == selected_provisioning_ticket_id:
+                    if execution_result == "Successful":
+                        ticket["Provisioning Status"] = final_status
+                        ticket["Ticket Status"] = "Closed"
+                    elif execution_result == "Partially Completed":
+                        ticket["Provisioning Status"] = "Provisioning In Progress"
+                        ticket["Ticket Status"] = "Approved"
+                    elif execution_result == "Failed":
+                        ticket["Provisioning Status"] = "Blocked"
+                        ticket["Ticket Status"] = "Pending Approval"
+                    else:
+                        ticket["Provisioning Status"] = "Manual Review Required"
+                        ticket["Ticket Status"] = "Pending Approval"
+
+            st.success(f"Provisioning action recorded for ticket {selected_provisioning_ticket_id}.")
+
+    else:
+        st.warning(
+            "No tickets are currently ready for provisioning. Approve a ticket and set "
+            "Provisioning Status to 'Ready for Provisioning' in the Approval Queue."
+        )
+
+else:
+    st.warning(
+        "No approval tickets exist yet. Create approval tickets before using the Provisioning Action Center."
+    )
+
+if st.session_state.provisioning_history:
+    st.write("### Provisioning Execution History")
+
+    provisioning_history_df = pd.DataFrame(st.session_state.provisioning_history)
+    st.dataframe(provisioning_history_df, use_container_width=True)
+
+    successful_provisioning_count = provisioning_history_df[
+        provisioning_history_df["Execution Result"] == "Successful"
+    ].shape[0]
+
+    failed_provisioning_count = provisioning_history_df[
+        provisioning_history_df["Execution Result"] == "Failed"
+    ].shape[0]
+
+    manual_review_provisioning_count = provisioning_history_df[
+        provisioning_history_df["Execution Result"] == "Requires Manual Review"
+    ].shape[0]
+
+    provision_metric_col1, provision_metric_col2, provision_metric_col3 = st.columns(3)
+
+    with provision_metric_col1:
+        st.metric("Successful Actions", successful_provisioning_count)
+
+    with provision_metric_col2:
+        st.metric("Failed Actions", failed_provisioning_count)
+
+    with provision_metric_col3:
+        st.metric("Manual Reviews", manual_review_provisioning_count)
+
+    provisioning_result_summary = (
+        provisioning_history_df.groupby(["Lifecycle Stage", "Execution Result"])
+        .size()
+        .reset_index(name="Action Count")
+    )
+
+    st.write("### Provisioning Result Breakdown")
+
+    st.dataframe(provisioning_result_summary, use_container_width=True)
+
+    provisioning_result_chart = px.bar(
+        provisioning_result_summary,
+        x="Lifecycle Stage",
+        y="Action Count",
+        color="Execution Result",
+        title="Provisioning Actions by Lifecycle Stage and Result"
+    )
+
+    st.plotly_chart(provisioning_result_chart, use_container_width=True)
+
+st.info(
+    "IAM Operations Note: The Provisioning Action Center represents the execution layer "
+    "of IdentityOS. In a production environment, these actions could call Microsoft Graph, "
+    "Entra ID, HRIS workflows, ticketing APIs, or identity governance platforms to create users, "
+    "assign groups, remove access, disable accounts, and revoke sessions."
+)
