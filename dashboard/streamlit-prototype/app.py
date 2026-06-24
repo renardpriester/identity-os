@@ -2067,3 +2067,382 @@ st.info(
     "or another source of truth. IdentityOS would then evaluate user attributes, recommend "
     "access, create approval tickets, and trigger provisioning workflows."
 )
+# ------------------------------------------------------------
+# IdentityOS - Governance Control Center
+# ------------------------------------------------------------
+
+st.markdown("---")
+st.header("IdentityOS Governance Control Center")
+
+st.markdown(
+    """
+    This section provides a consolidated governance view across IdentityOS.
+    It summarizes approval risk, lifecycle events, provisioning outcomes,
+    audit evidence, manual review volume, and immediate offboarding activity
+    to help IAM, Security, HR, and leadership understand identity governance posture.
+    """
+)
+
+# Safely pull IdentityOS workflow data from session state
+governance_approval_queue = st.session_state.get("approval_queue", [])
+governance_provisioning_history = st.session_state.get("provisioning_history", [])
+governance_hr_intake_queue = st.session_state.get("hr_identity_intake_queue", [])
+governance_joiner_log = st.session_state.get("access_decision_audit_log", [])
+governance_mover_log = st.session_state.get("mover_audit_log", [])
+governance_leaver_log = st.session_state.get("leaver_audit_log", [])
+
+approval_governance_df = pd.DataFrame(governance_approval_queue)
+provisioning_governance_df = pd.DataFrame(governance_provisioning_history)
+hr_governance_df = pd.DataFrame(governance_hr_intake_queue)
+joiner_governance_df = pd.DataFrame(governance_joiner_log)
+mover_governance_df = pd.DataFrame(governance_mover_log)
+leaver_governance_df = pd.DataFrame(governance_leaver_log)
+
+
+def governance_count_equal(df, column_name, target_value):
+    if column_name in df.columns:
+        return df[df[column_name] == target_value].shape[0]
+    return 0
+
+
+def governance_count_in(df, column_name, target_values):
+    if column_name in df.columns:
+        return df[df[column_name].isin(target_values)].shape[0]
+    return 0
+
+
+def governance_total_rows(df):
+    return len(df) if not df.empty else 0
+
+
+# Approval queue metrics
+open_approval_count = governance_count_in(
+    approval_governance_df,
+    "Ticket Status",
+    ["Pending Approval", "Approved", "Provisioning Ready"]
+)
+
+pending_approval_count = governance_count_equal(
+    approval_governance_df,
+    "Ticket Status",
+    "Pending Approval"
+)
+
+approved_ticket_count = governance_count_equal(
+    approval_governance_df,
+    "Ticket Status",
+    "Approved"
+)
+
+closed_ticket_count = governance_count_equal(
+    approval_governance_df,
+    "Ticket Status",
+    "Closed"
+)
+
+high_risk_ticket_count = governance_count_equal(
+    approval_governance_df,
+    "Risk Level",
+    "High"
+)
+
+manual_review_ticket_count = governance_count_in(
+    approval_governance_df,
+    "Provisioning Status",
+    ["Manual Review Required", "Blocked"]
+)
+
+# Provisioning metrics
+successful_provisioning_count = governance_count_equal(
+    provisioning_governance_df,
+    "Execution Result",
+    "Successful"
+)
+
+failed_provisioning_count = governance_count_equal(
+    provisioning_governance_df,
+    "Execution Result",
+    "Failed"
+)
+
+partial_provisioning_count = governance_count_equal(
+    provisioning_governance_df,
+    "Execution Result",
+    "Partially Completed"
+)
+
+manual_review_provisioning_count = governance_count_equal(
+    provisioning_governance_df,
+    "Execution Result",
+    "Requires Manual Review"
+)
+
+# Lifecycle risk metrics
+joiner_high_risk_count = governance_count_equal(
+    joiner_governance_df,
+    "Risk Level",
+    "High"
+)
+
+mover_high_risk_count = governance_count_equal(
+    mover_governance_df,
+    "New Risk Level",
+    "High"
+)
+
+leaver_high_risk_count = governance_count_equal(
+    leaver_governance_df,
+    "Leaver Risk Level",
+    "High"
+)
+
+total_high_risk_lifecycle_events = (
+    joiner_high_risk_count
+    + mover_high_risk_count
+    + leaver_high_risk_count
+    + high_risk_ticket_count
+)
+
+immediate_offboarding_count = governance_count_equal(
+    leaver_governance_df,
+    "Leaver Priority",
+    "Immediate Offboarding Required"
+)
+
+# HR intake metrics
+total_hr_intakes = governance_total_rows(hr_governance_df)
+
+high_risk_hr_intakes = governance_count_equal(
+    hr_governance_df,
+    "Risk Level",
+    "High"
+)
+
+manual_review_hr_intakes = governance_count_equal(
+    hr_governance_df,
+    "Recommended Access Package",
+    "Manual Review Required"
+)
+
+# Audit evidence metrics
+audit_evidence_records = (
+    governance_total_rows(joiner_governance_df)
+    + governance_total_rows(mover_governance_df)
+    + governance_total_rows(leaver_governance_df)
+    + governance_total_rows(provisioning_governance_df)
+)
+
+total_identity_events = (
+    governance_total_rows(joiner_governance_df)
+    + governance_total_rows(mover_governance_df)
+    + governance_total_rows(leaver_governance_df)
+    + governance_total_rows(hr_governance_df)
+    + governance_total_rows(approval_governance_df)
+    + governance_total_rows(provisioning_governance_df)
+)
+
+# Governance health score
+governance_health_score = 100
+
+governance_health_score -= min(open_approval_count * 3, 15)
+governance_health_score -= min(high_risk_ticket_count * 6, 18)
+governance_health_score -= min(failed_provisioning_count * 10, 20)
+governance_health_score -= min(manual_review_ticket_count * 5, 15)
+governance_health_score -= min(immediate_offboarding_count * 8, 16)
+governance_health_score -= min(manual_review_hr_intakes * 4, 12)
+
+governance_health_score = max(governance_health_score, 0)
+
+if governance_health_score >= 85:
+    governance_posture = "Healthy"
+    governance_posture_message = (
+        "Identity governance posture is healthy. Current activity shows manageable risk, "
+        "strong evidence capture, and no major operational concerns."
+    )
+elif governance_health_score >= 70:
+    governance_posture = "Watch"
+    governance_posture_message = (
+        "Identity governance posture requires monitoring. Open approvals, high-risk items, "
+        "or manual review activity should be reviewed by IAM operations."
+    )
+else:
+    governance_posture = "Action Required"
+    governance_posture_message = (
+        "Identity governance posture requires action. High-risk events, failed provisioning, "
+        "manual reviews, or immediate offboarding activity need IAM, Security, and HR follow-up."
+    )
+
+st.write("### Governance Health Overview")
+
+gov_metric_col1, gov_metric_col2, gov_metric_col3, gov_metric_col4 = st.columns(4)
+
+with gov_metric_col1:
+    st.metric("Governance Health Score", governance_health_score)
+
+with gov_metric_col2:
+    st.metric("Open Approvals", open_approval_count)
+
+with gov_metric_col3:
+    st.metric("High Risk Items", total_high_risk_lifecycle_events)
+
+with gov_metric_col4:
+    st.metric("Audit Evidence Records", audit_evidence_records)
+
+st.progress(governance_health_score / 100)
+
+if governance_posture == "Healthy":
+    st.success(f"Governance Posture: {governance_posture}")
+elif governance_posture == "Watch":
+    st.warning(f"Governance Posture: {governance_posture}")
+else:
+    st.error(f"Governance Posture: {governance_posture}")
+
+st.info(governance_posture_message)
+
+st.write("### Governance Control Summary")
+
+governance_control_summary = [
+    {
+        "Governance Area": "Approval Management",
+        "Current Count": open_approval_count,
+        "Risk Signal": "Open approvals waiting for decision",
+        "Recommended Owner": "IAM Operations / Managers",
+        "Priority": "High" if open_approval_count >= 5 else "Standard"
+    },
+    {
+        "Governance Area": "High Risk Identity Events",
+        "Current Count": total_high_risk_lifecycle_events,
+        "Risk Signal": "High-risk Joiner, Mover, Leaver, or ticket activity",
+        "Recommended Owner": "Security / IAM Leadership",
+        "Priority": "High" if total_high_risk_lifecycle_events > 0 else "Standard"
+    },
+    {
+        "Governance Area": "Provisioning Failures",
+        "Current Count": failed_provisioning_count,
+        "Risk Signal": "Failed IAM execution activity",
+        "Recommended Owner": "IAM Engineering",
+        "Priority": "High" if failed_provisioning_count > 0 else "Standard"
+    },
+    {
+        "Governance Area": "Manual Reviews",
+        "Current Count": manual_review_ticket_count + manual_review_hr_intakes + manual_review_provisioning_count,
+        "Risk Signal": "Access decisions requiring human validation",
+        "Recommended Owner": "IAM Governance",
+        "Priority": "High" if manual_review_ticket_count + manual_review_hr_intakes + manual_review_provisioning_count > 0 else "Standard"
+    },
+    {
+        "Governance Area": "Immediate Offboarding",
+        "Current Count": immediate_offboarding_count,
+        "Risk Signal": "High-risk leaver activity requiring immediate disablement",
+        "Recommended Owner": "HR / Security / IAM",
+        "Priority": "Critical" if immediate_offboarding_count > 0 else "Standard"
+    },
+    {
+        "Governance Area": "Audit Evidence",
+        "Current Count": audit_evidence_records,
+        "Risk Signal": "Recorded evidence for lifecycle and provisioning decisions",
+        "Recommended Owner": "Compliance / IAM Governance",
+        "Priority": "Standard"
+    }
+]
+
+governance_control_df = pd.DataFrame(governance_control_summary)
+st.dataframe(governance_control_df, use_container_width=True)
+
+st.write("### Governance Risk Dashboard")
+
+governance_risk_chart_data = pd.DataFrame(
+    [
+        {"Metric": "Open Approvals", "Count": open_approval_count},
+        {"Metric": "High Risk Items", "Count": total_high_risk_lifecycle_events},
+        {"Metric": "Provisioning Failures", "Count": failed_provisioning_count},
+        {"Metric": "Manual Reviews", "Count": manual_review_ticket_count + manual_review_hr_intakes + manual_review_provisioning_count},
+        {"Metric": "Immediate Offboarding", "Count": immediate_offboarding_count},
+        {"Metric": "Audit Evidence Records", "Count": audit_evidence_records}
+    ]
+)
+
+st.dataframe(governance_risk_chart_data, use_container_width=True)
+
+governance_risk_chart = px.bar(
+    governance_risk_chart_data,
+    x="Metric",
+    y="Count",
+    title="IdentityOS Governance Risk and Evidence Summary"
+)
+
+st.plotly_chart(governance_risk_chart, use_container_width=True)
+
+st.write("### Operational Response Plan")
+
+response_plan = []
+
+if open_approval_count > 0:
+    response_plan.append(
+        {
+            "Action Item": "Review open approval tickets",
+            "Why It Matters": "Pending approvals can delay provisioning or offboarding workflows.",
+            "Owner": "IAM Operations / Approvers",
+            "Status": "Action Recommended"
+        }
+    )
+
+if total_high_risk_lifecycle_events > 0:
+    response_plan.append(
+        {
+            "Action Item": "Validate high-risk identity events",
+            "Why It Matters": "High-risk lifecycle activity may require additional security review.",
+            "Owner": "Security / IAM Leadership",
+            "Status": "Action Recommended"
+        }
+    )
+
+if failed_provisioning_count > 0:
+    response_plan.append(
+        {
+            "Action Item": "Investigate failed provisioning actions",
+            "Why It Matters": "Failed provisioning can leave access incomplete, excessive, or inconsistent.",
+            "Owner": "IAM Engineering",
+            "Status": "Action Required"
+        }
+    )
+
+if immediate_offboarding_count > 0:
+    response_plan.append(
+        {
+            "Action Item": "Confirm immediate offboarding completion",
+            "Why It Matters": "High-risk leavers require fast account disablement, access removal, and session revocation.",
+            "Owner": "HR / Security / IAM",
+            "Status": "Critical"
+        }
+    )
+
+if manual_review_ticket_count + manual_review_hr_intakes + manual_review_provisioning_count > 0:
+    response_plan.append(
+        {
+            "Action Item": "Resolve manual review queue",
+            "Why It Matters": "Manual review items need validation before access is granted, changed, or removed.",
+            "Owner": "IAM Governance",
+            "Status": "Action Recommended"
+        }
+    )
+
+if not response_plan:
+    response_plan.append(
+        {
+            "Action Item": "Continue monitoring identity lifecycle activity",
+            "Why It Matters": "No urgent governance issues are currently visible in the recorded IdentityOS activity.",
+            "Owner": "IAM Governance",
+            "Status": "Monitoring"
+        }
+    )
+
+response_plan_df = pd.DataFrame(response_plan)
+st.dataframe(response_plan_df, use_container_width=True)
+
+st.info(
+    "Executive Governance Note: The Governance Control Center gives IdentityOS a consolidated "
+    "view of identity risk, operational workload, approval health, provisioning outcomes, and "
+    "audit evidence. In a production environment, this could support IAM leadership reporting, "
+    "audit readiness, access review programs, and security operations handoffs."
+)
