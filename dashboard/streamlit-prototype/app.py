@@ -1037,3 +1037,182 @@ st.info(
     "accumulate as employees change roles. IdentityOS compares current access to future-state "
     "access so outdated permissions can be removed and new access can be approved through governance."
 )
+# ------------------------------------------------------------
+# Identity Lifecycle Management - Leaver Workflow Engine
+# ------------------------------------------------------------
+
+st.markdown("---")
+st.subheader("Leaver Workflow Engine")
+
+st.markdown(
+    """
+    This section simulates how IdentityOS handles employee offboarding. The engine
+    evaluates the employee's department, job role, access package, and risk level
+    to recommend account disablement, access removal, session revocation, and
+    audit evidence capture.
+    """
+)
+
+leaver_col1, leaver_col2 = st.columns(2)
+
+with leaver_col1:
+    leaver_name = st.text_input(
+        "Employee Name",
+        value="Marcus Lee",
+        key="leaver_employee_name"
+    )
+
+    leaver_department = st.selectbox(
+        "Leaver Department",
+        ["HR", "Finance", "Security", "IT", "Executives", "Legal", "Operations"],
+        key="leaver_department_select"
+    )
+
+with leaver_col2:
+    leaver_job_title = st.selectbox(
+        "Leaver Job Title",
+        [
+            "HR Specialist",
+            "Finance Analyst",
+            "Security Analyst",
+            "IT Support Technician",
+            "Executive Assistant",
+            "Legal Analyst",
+            "Operations Coordinator"
+        ],
+        key="leaver_job_title_select"
+    )
+
+    leaver_type = st.selectbox(
+        "Departure Type",
+        [
+            "Voluntary Departure",
+            "Involuntary Departure",
+            "Contract End",
+            "High Risk Termination"
+        ],
+        key="leaver_type_select"
+    )
+
+leaver_access = recommend_access_package(leaver_department, leaver_job_title)
+
+leaver_risk_level = leaver_access["Risk Level"]
+
+if leaver_type in ["Involuntary Departure", "High Risk Termination"]:
+    leaver_risk_level = "High"
+
+st.write("### Leaver Access Evaluation")
+
+leaver_metric_col1, leaver_metric_col2, leaver_metric_col3 = st.columns(3)
+
+with leaver_metric_col1:
+    st.metric("Current Access Package", leaver_access["Access Package"])
+
+with leaver_metric_col2:
+    st.metric("Leaver Risk Level", leaver_risk_level)
+
+with leaver_metric_col3:
+    st.metric("Departure Type", leaver_type)
+
+if leaver_risk_level == "High":
+    leaver_priority = "Immediate Offboarding Required"
+    leaver_action = (
+        "Disable account immediately, revoke active sessions, remove all group memberships, "
+        "block sign-in, preserve mailbox/data for investigation, and notify Security."
+    )
+else:
+    leaver_priority = "Standard Offboarding"
+    leaver_action = (
+        "Disable account on scheduled departure date, remove assigned access package, "
+        "revoke sessions, remove group memberships, and retain audit evidence."
+    )
+
+if leaver_risk_level == "High":
+    st.error(f"Leaver Priority: {leaver_priority}")
+else:
+    st.success(f"Leaver Priority: {leaver_priority}")
+
+st.info(f"Recommended Offboarding Action: {leaver_action}")
+
+leaver_control_summary = [
+    {
+        "Offboarding Control": "Account Status",
+        "Action": "Disable user account",
+        "Priority": "Immediate" if leaver_risk_level == "High" else "Scheduled"
+    },
+    {
+        "Offboarding Control": "Access Package",
+        "Action": f"Remove {leaver_access['Access Package']}",
+        "Priority": "Immediate" if leaver_risk_level == "High" else "Standard"
+    },
+    {
+        "Offboarding Control": "Group Memberships",
+        "Action": "Remove all assigned security and application groups",
+        "Priority": "Immediate" if leaver_risk_level == "High" else "Standard"
+    },
+    {
+        "Offboarding Control": "Active Sessions",
+        "Action": "Revoke refresh tokens and active sessions",
+        "Priority": "Immediate"
+    },
+    {
+        "Offboarding Control": "Audit Evidence",
+        "Action": "Record offboarding decision and retain evidence",
+        "Priority": "Required"
+    }
+]
+
+leaver_control_df = pd.DataFrame(leaver_control_summary)
+
+st.dataframe(leaver_control_df, use_container_width=True)
+
+if "leaver_audit_log" not in st.session_state:
+    st.session_state.leaver_audit_log = []
+
+if st.button("Record Leaver Decision"):
+    leaver_audit_entry = {
+        "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "Employee": leaver_name,
+        "Department": leaver_department,
+        "Job Title": leaver_job_title,
+        "Access Package Removed": leaver_access["Access Package"],
+        "Departure Type": leaver_type,
+        "Leaver Risk Level": leaver_risk_level,
+        "Leaver Priority": leaver_priority,
+        "Recommended Action": leaver_action,
+        "Decision Source": "IdentityOS Leaver Workflow Engine"
+    }
+
+    st.session_state.leaver_audit_log.append(leaver_audit_entry)
+    st.success("Leaver decision recorded in the audit log.")
+
+if st.session_state.leaver_audit_log:
+    st.write("### Leaver Decision Audit Log")
+
+    leaver_audit_df = pd.DataFrame(st.session_state.leaver_audit_log)
+    st.dataframe(leaver_audit_df, use_container_width=True)
+
+    high_risk_leaver_count = leaver_audit_df[
+        leaver_audit_df["Leaver Risk Level"] == "High"
+    ].shape[0]
+
+    immediate_offboarding_count = leaver_audit_df[
+        leaver_audit_df["Leaver Priority"] == "Immediate Offboarding Required"
+    ].shape[0]
+
+    leaver_log_col1, leaver_log_col2, leaver_log_col3 = st.columns(3)
+
+    with leaver_log_col1:
+        st.metric("Leaver Decisions", len(leaver_audit_df))
+
+    with leaver_log_col2:
+        st.metric("High Risk Leavers", high_risk_leaver_count)
+
+    with leaver_log_col3:
+        st.metric("Immediate Offboarding", immediate_offboarding_count)
+
+st.info(
+    "IAM Governance Note: Leaver workflows are one of the most important controls in identity security. "
+    "IdentityOS supports offboarding governance by identifying access removal, account disablement, "
+    "session revocation, and audit evidence requirements before access is fully removed."
+)
