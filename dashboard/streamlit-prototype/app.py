@@ -4,7 +4,7 @@ from typing import Any, Dict
 
 import pandas as pd
 import streamlit as st
-
+import plotly.express as px
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 METRICS_PATH = ROOT_DIR / "examples" / "sample-dashboard-metrics.json"
@@ -582,4 +582,274 @@ policy decisions, governance workflows, risk signals, access drift findings,
 automation outputs, Microsoft Entra ID integration concepts, and audit evidence
 into an interactive dashboard experience.
 """
+)
+# ------------------------------------------------------------
+# Identity Lifecycle Management - Joiner Access Packages
+# ------------------------------------------------------------
+
+st.markdown("---")
+st.header("Identity Lifecycle Management")
+st.subheader("New Hire Access Package Recommendations")
+
+st.markdown(
+    """
+    This section simulates how IdentityOS evaluates new hire identity attributes
+    such as department, job title, and workforce role to recommend the appropriate
+    access package before provisioning begins.
+    """
+)
+
+new_hire_access_packages = [
+    {
+        "Employee": "Alicia Brown",
+        "Department": "HR",
+        "Job Title": "HR Specialist",
+        "Recommended Access Package": "HR Core Access",
+        "Approval Required": "Manager Approval",
+        "Provisioning Status": "Pending Approval",
+        "Risk Level": "Low"
+    },
+    {
+        "Employee": "Marcus Lee",
+        "Department": "Finance",
+        "Job Title": "Finance Analyst",
+        "Recommended Access Package": "Finance Core Access",
+        "Approval Required": "Finance Manager Approval",
+        "Provisioning Status": "Pending Approval",
+        "Risk Level": "Medium"
+    },
+    {
+        "Employee": "Nina Patel",
+        "Department": "Security",
+        "Job Title": "Security Analyst",
+        "Recommended Access Package": "Security Operations Access",
+        "Approval Required": "Security Leadership Approval",
+        "Provisioning Status": "Pending Approval",
+        "Risk Level": "Medium"
+    },
+    {
+        "Employee": "David Kim",
+        "Department": "IT",
+        "Job Title": "IT Support Technician",
+        "Recommended Access Package": "IT Support Access",
+        "Approval Required": "IT Manager Approval",
+        "Provisioning Status": "Pending Approval",
+        "Risk Level": "Medium"
+    },
+    {
+        "Employee": "Executive Admin",
+        "Department": "Executives",
+        "Job Title": "Executive Assistant",
+        "Recommended Access Package": "Executive Support Access",
+        "Approval Required": "Executive Approval + Security Review",
+        "Provisioning Status": "Pending Review",
+        "Risk Level": "High"
+    }
+]
+
+new_hire_df = pd.DataFrame(new_hire_access_packages)
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.metric("New Hire Requests", len(new_hire_df))
+
+with col2:
+    pending_count = new_hire_df[
+        new_hire_df["Provisioning Status"].str.contains("Pending")
+    ].shape[0]
+    st.metric("Pending Provisioning", pending_count)
+
+with col3:
+    high_risk_count = new_hire_df[
+        new_hire_df["Risk Level"] == "High"
+    ].shape[0]
+    st.metric("High Risk Requests", high_risk_count)
+
+st.dataframe(new_hire_df, use_container_width=True)
+
+risk_chart = px.bar(
+    new_hire_df,
+    x="Employee",
+    y=[1] * len(new_hire_df),
+    color="Risk Level",
+    title="New Hire Access Request Risk Levels",
+    labels={"value": "Request Count", "Employee": "Employee"}
+)
+
+st.plotly_chart(risk_chart, use_container_width=True)
+
+st.info(
+    "IAM Architecture Note: IdentityOS maps workforce attributes to access packages, "
+    "helping standardize joiner access, reduce manual provisioning, and provide "
+    "governance visibility before access is granted."
+)
+# ------------------------------------------------------------
+# Identity Lifecycle Management - Access Package Policy Engine
+# ------------------------------------------------------------
+
+st.markdown("---")
+st.subheader("Access Package Policy Engine")
+
+st.markdown(
+    """
+    This simulator demonstrates how IdentityOS can evaluate workforce identity
+    attributes and recommend a standardized access package based on department
+    and job role.
+    """
+)
+
+access_policy_map = {
+    ("HR", "HR Specialist"): {
+        "Access Package": "HR Core Access",
+        "Approval Workflow": "Manager Approval",
+        "Risk Level": "Low",
+        "Provisioning Action": "Create account, assign HR group, grant HR application access"
+    },
+    ("Finance", "Finance Analyst"): {
+        "Access Package": "Finance Core Access",
+        "Approval Workflow": "Finance Manager Approval",
+        "Risk Level": "Medium",
+        "Provisioning Action": "Create account, assign Finance group, grant finance application access"
+    },
+    ("Security", "Security Analyst"): {
+        "Access Package": "Security Operations Access",
+        "Approval Workflow": "Security Leadership Approval",
+        "Risk Level": "Medium",
+        "Provisioning Action": "Create account, assign Security Operations group, grant monitoring tool access"
+    },
+    ("IT", "IT Support Technician"): {
+        "Access Package": "IT Support Access",
+        "Approval Workflow": "IT Manager Approval",
+        "Risk Level": "Medium",
+        "Provisioning Action": "Create account, assign IT Support group, grant helpdesk tool access"
+    },
+    ("Executives", "Executive Assistant"): {
+        "Access Package": "Executive Support Access",
+        "Approval Workflow": "Executive Approval + Security Review",
+        "Risk Level": "High",
+        "Provisioning Action": "Create account, assign Executive Support group, require MFA and security review"
+    }
+}
+
+def recommend_access_package(department, job_title):
+    return access_policy_map.get(
+        (department, job_title),
+        {
+            "Access Package": "Manual Review Required",
+            "Approval Workflow": "IAM Team Review",
+            "Risk Level": "Unknown",
+            "Provisioning Action": "Do not provision automatically"
+        }
+    )
+
+sim_col1, sim_col2 = st.columns(2)
+
+with sim_col1:
+    selected_department = st.selectbox(
+        "Select Department",
+        ["HR", "Finance", "Security", "IT", "Executives", "Legal", "Operations"]
+    )
+
+with sim_col2:
+    selected_job_title = st.selectbox(
+        "Select Job Title",
+        [
+            "HR Specialist",
+            "Finance Analyst",
+            "Security Analyst",
+            "IT Support Technician",
+            "Executive Assistant",
+            "Legal Analyst",
+            "Operations Coordinator"
+        ]
+    )
+
+recommendation = recommend_access_package(selected_department, selected_job_title)
+
+st.write("### Recommended IdentityOS Decision")
+
+decision_col1, decision_col2, decision_col3 = st.columns(3)
+
+with decision_col1:
+    st.metric("Access Package", recommendation["Access Package"])
+
+with decision_col2:
+    st.metric("Risk Level", recommendation["Risk Level"])
+
+with decision_col3:
+    st.metric("Approval Workflow", recommendation["Approval Workflow"])
+
+st.success(f"Provisioning Action: {recommendation['Provisioning Action']}")
+
+st.info(
+    "IAM Architecture Note: This policy engine represents the foundation of automated "
+    "Joiner workflows. In a live enterprise environment, these mappings would be driven "
+    "by HR attributes such as department, job title, location, and employment type."
+)
+# ------------------------------------------------------------
+# Identity Lifecycle Management - Access Decision Audit Log
+# ------------------------------------------------------------
+
+st.markdown("---")
+st.subheader("Access Decision Audit Log")
+
+st.markdown(
+    """
+    This section captures simulated audit evidence for access package decisions.
+    In an enterprise IAM environment, this type of log would support compliance,
+    access reviews, security investigations, and governance reporting.
+    """
+)
+
+from datetime import datetime
+
+if "access_decision_audit_log" not in st.session_state:
+    st.session_state.access_decision_audit_log = []
+
+if st.button("Record Current Access Decision"):
+    audit_entry = {
+        "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "Department": selected_department,
+        "Job Title": selected_job_title,
+        "Recommended Access Package": recommendation["Access Package"],
+        "Approval Workflow": recommendation["Approval Workflow"],
+        "Risk Level": recommendation["Risk Level"],
+        "Provisioning Action": recommendation["Provisioning Action"],
+        "Decision Source": "IdentityOS Policy Engine"
+    }
+
+    st.session_state.access_decision_audit_log.append(audit_entry)
+    st.success("Access decision recorded in the audit log.")
+
+if st.session_state.access_decision_audit_log:
+    audit_log_df = pd.DataFrame(st.session_state.access_decision_audit_log)
+    st.dataframe(audit_log_df, use_container_width=True)
+
+    high_risk_audit_count = audit_log_df[
+        audit_log_df["Risk Level"] == "High"
+    ].shape[0]
+
+    manual_review_count = audit_log_df[
+        audit_log_df["Recommended Access Package"] == "Manual Review Required"
+    ].shape[0]
+
+    audit_col1, audit_col2, audit_col3 = st.columns(3)
+
+    with audit_col1:
+        st.metric("Recorded Decisions", len(audit_log_df))
+
+    with audit_col2:
+        st.metric("High Risk Decisions", high_risk_audit_count)
+
+    with audit_col3:
+        st.metric("Manual Reviews", manual_review_count)
+
+else:
+    st.warning("No access decisions have been recorded yet.")
+
+st.info(
+    "IAM Governance Note: Access decision logs provide evidence for auditors, "
+    "help security teams investigate provisioning activity, and support access "
+    "review programs by showing why access was recommended or withheld."
 )
