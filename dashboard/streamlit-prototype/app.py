@@ -13,6 +13,8 @@ REPORTS_DIR = ROOT_DIR / "reports"
 CORE_DASHBOARD_OUTPUT_PATH = (
     ROOT_DIR / "identityos-core" / "outputs" / "dashboard" / "dashboard-output.json"
 )
+ASSETS_DIR = ROOT_DIR / "assets"
+LOGO_PATH = ASSETS_DIR / "identityos-logo.png"
 IDENTITYOS_STATE_DIR = ROOT_DIR / "identityos-state"
 
 IDENTITYOS_STATE_FILES = {
@@ -255,10 +257,35 @@ st.sidebar.markdown(
 if "identityos_state_loaded_from_disk" not in st.session_state:
     load_identityos_state_from_disk()
     st.session_state.identityos_state_loaded_from_disk = True
+
+
+st.markdown("---")
+
+header_col1, header_col2 = st.columns([1, 5])
+
+with header_col1:
+    if LOGO_PATH.exists():
+        st.image(str(LOGO_PATH), width=95)
+    else:
+        st.markdown("### 🛡️")
+
+with header_col2:
+    st.markdown(
+        """
+        # IdentityOS
+        ### Identity Lifecycle Command Center
+        """
+    )
+
+    st.caption(
+        "v0.2 | HR Intake • JML Workflows • Approval Queue • Provisioning • Governance • Persistence"
+    )
+
+st.markdown("---")
+
 st.title("IdentityOS Dashboard Prototype")
 st.caption(
-    "Interactive IAM dashboard prototype for lifecycle operations, governance, "
-    "risk scoring, access drift, automation health, and audit evidence."
+    "Enterprise identity lifecycle, governance, approval, provisioning, and audit simulation."
 )
 
 if selected_view == "Executive Overview":
