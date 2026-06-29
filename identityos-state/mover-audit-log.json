@@ -1,1 +1,16 @@
-[]
+[
+    {
+        "Scenario ID": "IDENTITYOS_DEMO_001",
+        "Timestamp": "2026-06-29 11:33:31",
+        "Current Department": "Finance",
+        "Current Job Title": "Finance Analyst",
+        "New Department": "Executives",
+        "New Job Title": "Executive Assistant",
+        "Current Access Package": "Finance Core Access",
+        "New Access Package": "Executive Support Access",
+        "Mover Decision": "Access Package Change Required",
+        "Recommended Action": "Remove 'Finance Core Access' and assign 'Executive Support Access' after approval workflow: Executive Approval + Security Review",
+        "New Risk Level": "High",
+        "Decision Source": "IdentityOS Mover Workflow Engine"
+    }
+]

@@ -1,1 +1,28 @@
-[]
+[
+    {
+        "Scenario ID": "IDENTITYOS_DEMO_001",
+        "Timestamp": "2026-06-29 11:33:31",
+        "Ticket ID": "IAM-DEMO-001",
+        "Lifecycle Stage": "Joiner",
+        "Employee": "Jordan Williams",
+        "Access Package / Control": "Finance Core Access",
+        "Risk Level": "Medium",
+        "Execution Result": "Successful",
+        "Final Provisioning Status": "Provisioned",
+        "Provisioning Notes": "Demo provisioning completed for Finance Analyst onboarding.",
+        "Decision Source": "IdentityOS Provisioning Action Center"
+    },
+    {
+        "Scenario ID": "IDENTITYOS_DEMO_001",
+        "Timestamp": "2026-06-29 11:33:31",
+        "Ticket ID": "IAM-DEMO-003",
+        "Lifecycle Stage": "Leaver",
+        "Employee": "Marcus Lee",
+        "Access Package / Control": "Finance Core Access",
+        "Risk Level": "High",
+        "Execution Result": "Successful",
+        "Final Provisioning Status": "Access Removed",
+        "Provisioning Notes": "Demo high-risk leaver offboarding completed.",
+        "Decision Source": "IdentityOS Provisioning Action Center"
+    }
+]

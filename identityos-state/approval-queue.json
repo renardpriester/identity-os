@@ -1,1 +1,47 @@
-[]
+[
+    {
+        "Scenario ID": "IDENTITYOS_DEMO_001",
+        "Ticket ID": "IAM-DEMO-001",
+        "Created": "2026-06-29 11:33:31",
+        "Lifecycle Stage": "Joiner",
+        "Employee": "Jordan Williams",
+        "Request Type": "HR New Hire Access Request",
+        "Access Package / Control": "Finance Core Access",
+        "Approval Owner": "Finance Manager Approval",
+        "Risk Level": "Medium",
+        "Recommended Action": "Create account, assign Finance group, grant finance application access",
+        "Ticket Status": "Approved",
+        "Provisioning Status": "Ready for Provisioning",
+        "Decision Source": "IdentityOS Workflow Engine"
+    },
+    {
+        "Scenario ID": "IDENTITYOS_DEMO_001",
+        "Ticket ID": "IAM-DEMO-002",
+        "Created": "2026-06-29 11:33:31",
+        "Lifecycle Stage": "Mover",
+        "Employee": "Finance to Executives Employee",
+        "Request Type": "Access Change Request",
+        "Access Package / Control": "Executive Support Access",
+        "Approval Owner": "Executive Approval + Security Review",
+        "Risk Level": "High",
+        "Recommended Action": "Remove 'Finance Core Access' and assign 'Executive Support Access' after approval workflow: Executive Approval + Security Review",
+        "Ticket Status": "Pending Approval",
+        "Provisioning Status": "Not Started",
+        "Decision Source": "IdentityOS Workflow Engine"
+    },
+    {
+        "Scenario ID": "IDENTITYOS_DEMO_001",
+        "Ticket ID": "IAM-DEMO-003",
+        "Created": "2026-06-29 11:33:31",
+        "Lifecycle Stage": "Leaver",
+        "Employee": "Marcus Lee",
+        "Request Type": "Offboarding Control Request",
+        "Access Package / Control": "Finance Core Access",
+        "Approval Owner": "HR + IAM + Security",
+        "Risk Level": "High",
+        "Recommended Action": "Disable account immediately, revoke active sessions, remove all group memberships, block sign-in, preserve mailbox/data for investigation, and notify Security.",
+        "Ticket Status": "Approved",
+        "Provisioning Status": "Ready for Provisioning",
+        "Decision Source": "IdentityOS Workflow Engine"
+    }
+]

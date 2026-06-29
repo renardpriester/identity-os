@@ -26,5 +26,35 @@
         "Review Decision": "Approve / Retain Access",
         "Review Notes": "Access reviewed as part of IdentityOS campaign simulation.",
         "Decision Source": "IdentityOS Access Review Campaign Center"
+    },
+    {
+        "Scenario ID": "IDENTITYOS_DEMO_001",
+        "Decision ID": "ARD-DEMO-001",
+        "Timestamp": "2026-06-29 11:33:31",
+        "Campaign ID": "ARC-DEMO-001",
+        "Campaign Name": "Quarterly Identity Access Review",
+        "Employee": "Executive Admin",
+        "Lifecycle Stage": "Joiner",
+        "Access Package / Control": "Executive Support Access",
+        "Risk Level": "High",
+        "Reviewer": "Executive Approval + Security Review",
+        "Review Decision": "Escalate to Security",
+        "Review Notes": "High-value user access requires security validation before certification.",
+        "Decision Source": "IdentityOS Access Review Campaign Center"
+    },
+    {
+        "Scenario ID": "IDENTITYOS_DEMO_001",
+        "Decision ID": "ARD-DEMO-002",
+        "Timestamp": "2026-06-29 11:33:31",
+        "Campaign ID": "ARC-DEMO-001",
+        "Campaign Name": "Quarterly Identity Access Review",
+        "Employee": "Marcus Lee",
+        "Lifecycle Stage": "Leaver",
+        "Access Package / Control": "Finance Core Access",
+        "Risk Level": "High",
+        "Reviewer": "HR + Security + IAM",
+        "Review Decision": "Revoke Access",
+        "Review Notes": "Access removal confirmed for high-risk leaver scenario.",
+        "Decision Source": "IdentityOS Access Review Campaign Center"
     }
 ]

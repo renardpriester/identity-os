@@ -1,1 +1,15 @@
-[]
+[
+    {
+        "Scenario ID": "IDENTITYOS_DEMO_001",
+        "Timestamp": "2026-06-29 11:33:31",
+        "Employee": "Marcus Lee",
+        "Department": "Finance",
+        "Job Title": "Finance Analyst",
+        "Access Package Removed": "Finance Core Access",
+        "Departure Type": "High Risk Termination",
+        "Leaver Risk Level": "High",
+        "Leaver Priority": "Immediate Offboarding Required",
+        "Recommended Action": "Disable account immediately, revoke active sessions, remove all group memberships, block sign-in, preserve mailbox/data for investigation, and notify Security.",
+        "Decision Source": "IdentityOS Leaver Workflow Engine"
+    }
+]

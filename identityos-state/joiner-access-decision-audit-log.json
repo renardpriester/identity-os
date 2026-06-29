@@ -1,1 +1,24 @@
-[]
+[
+    {
+        "Scenario ID": "IDENTITYOS_DEMO_001",
+        "Timestamp": "2026-06-29 11:33:31",
+        "Department": "Finance",
+        "Job Title": "Finance Analyst",
+        "Recommended Access Package": "Finance Core Access",
+        "Approval Workflow": "Finance Manager Approval",
+        "Risk Level": "Medium",
+        "Provisioning Action": "Create account, assign Finance group, grant finance application access",
+        "Decision Source": "IdentityOS Policy Engine"
+    },
+    {
+        "Scenario ID": "IDENTITYOS_DEMO_001",
+        "Timestamp": "2026-06-29 11:33:31",
+        "Department": "Executives",
+        "Job Title": "Executive Assistant",
+        "Recommended Access Package": "Executive Support Access",
+        "Approval Workflow": "Executive Approval + Security Review",
+        "Risk Level": "High",
+        "Provisioning Action": "Create account, assign Executive Support group, require MFA and security review",
+        "Decision Source": "IdentityOS Policy Engine"
+    }
+]

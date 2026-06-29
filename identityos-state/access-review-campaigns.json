@@ -45,5 +45,53 @@
             }
         ],
         "Decision Source": "IdentityOS Access Review Campaign Center"
+    },
+    {
+        "Scenario ID": "IDENTITYOS_DEMO_001",
+        "Campaign ID": "ARC-DEMO-001",
+        "Created": "2026-06-29 11:33:31",
+        "Campaign Name": "Quarterly Identity Access Review",
+        "Campaign Scope": "All Access",
+        "Campaign Owner": "IAM Governance",
+        "Review Due Date": "2026-06-29",
+        "Candidate Count": 3,
+        "High Risk Candidates": 3,
+        "Campaign Status": "In Progress",
+        "Review Items": [
+            {
+                "Source": "Approval Queue",
+                "Employee": "Executive Admin",
+                "Lifecycle Stage": "Joiner",
+                "Access Package / Control": "Executive Support Access",
+                "Risk Level": "High",
+                "Current Status": "Pending Approval",
+                "Reviewer": "Executive Approval + Security Review",
+                "Review Reason": "High-risk approval ticket requires validation",
+                "Recommended Review Action": "Security review required"
+            },
+            {
+                "Source": "Mover Audit Log",
+                "Employee": "Finance to Executives Employee",
+                "Lifecycle Stage": "Mover",
+                "Access Package / Control": "Executive Support Access",
+                "Risk Level": "High",
+                "Current Status": "Access Package Change Required",
+                "Reviewer": "IAM Governance",
+                "Review Reason": "Role change requires access creep review",
+                "Recommended Review Action": "Confirm prior access was removed and new access is appropriate"
+            },
+            {
+                "Source": "Leaver Audit Log",
+                "Employee": "Marcus Lee",
+                "Lifecycle Stage": "Leaver",
+                "Access Package / Control": "Finance Core Access",
+                "Risk Level": "High",
+                "Current Status": "Immediate Offboarding Required",
+                "Reviewer": "HR + Security + IAM",
+                "Review Reason": "Offboarding access removal verification",
+                "Recommended Review Action": "Confirm account disablement, access removal, and session revocation"
+            }
+        ],
+        "Decision Source": "IdentityOS Access Review Campaign Center"
     }
 ]

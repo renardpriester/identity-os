@@ -325,7 +325,405 @@ st.success(
 )
 
 st.markdown("---")
+# ------------------------------------------------------------
+# IdentityOS - Demo Scenario Launcher
+# ------------------------------------------------------------
 
+st.markdown("---")
+st.header("IdentityOS Demo Scenario Launcher")
+
+st.markdown(
+    """
+    Use this launcher to populate IdentityOS with a complete sample identity
+    lifecycle scenario. This helps demonstrate HR intake, Joiner/Mover/Leaver
+    workflows, approvals, provisioning, governance, access reviews, and evidence
+    exports without manually creating records one by one.
+    """
+)
+
+DEMO_SCENARIO_ID = "IDENTITYOS_DEMO_001"
+
+
+def demo_records_exist():
+    demo_state_keys = [
+        "hr_identity_intake_queue",
+        "approval_queue",
+        "provisioning_history",
+        "access_decision_audit_log",
+        "mover_audit_log",
+        "leaver_audit_log",
+        "access_review_campaigns",
+        "access_review_decisions",
+    ]
+
+    for state_key in demo_state_keys:
+        for record in st.session_state.get(state_key, []):
+            if record.get("Scenario ID") == DEMO_SCENARIO_ID:
+                return True
+
+    return False
+
+
+def remove_demo_records_from_state():
+    demo_state_keys = [
+        "hr_identity_intake_queue",
+        "approval_queue",
+        "provisioning_history",
+        "access_decision_audit_log",
+        "mover_audit_log",
+        "leaver_audit_log",
+        "access_review_campaigns",
+        "access_review_decisions",
+    ]
+
+    for state_key in demo_state_keys:
+        existing_records = st.session_state.get(state_key, [])
+        st.session_state[state_key] = [
+            record
+            for record in existing_records
+            if record.get("Scenario ID") != DEMO_SCENARIO_ID
+        ]
+
+
+def load_identityos_demo_scenario():
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    for state_key in [
+        "hr_identity_intake_queue",
+        "approval_queue",
+        "provisioning_history",
+        "access_decision_audit_log",
+        "mover_audit_log",
+        "leaver_audit_log",
+        "access_review_campaigns",
+        "access_review_decisions",
+    ]:
+        if state_key not in st.session_state:
+            st.session_state[state_key] = []
+
+    hr_demo_records = [
+        {
+            "Scenario ID": DEMO_SCENARIO_ID,
+            "Intake ID": "HR-DEMO-001",
+            "Submitted": now,
+            "New Hire Name": "Jordan Williams",
+            "Department": "Finance",
+            "Job Title": "Finance Analyst",
+            "Location": "Orlando",
+            "Employment Type": "Full-Time",
+            "Start Date": str(datetime.now().date()),
+            "Recommended Access Package": "Finance Core Access",
+            "Approval Workflow": "Finance Manager Approval",
+            "Risk Level": "Medium",
+            "Provisioning Action": "Create account, assign Finance group, grant finance application access",
+            "Intake Status": "Approval Ticket Created",
+            "Ticket Created": "Yes"
+        },
+        {
+            "Scenario ID": DEMO_SCENARIO_ID,
+            "Intake ID": "HR-DEMO-002",
+            "Submitted": now,
+            "New Hire Name": "Alicia Brown",
+            "Department": "HR",
+            "Job Title": "HR Specialist",
+            "Location": "Remote",
+            "Employment Type": "Full-Time",
+            "Start Date": str(datetime.now().date()),
+            "Recommended Access Package": "HR Core Access",
+            "Approval Workflow": "Manager Approval",
+            "Risk Level": "Low",
+            "Provisioning Action": "Create account, assign HR group, grant HR application access",
+            "Intake Status": "Submitted",
+            "Ticket Created": "No"
+        },
+        {
+            "Scenario ID": DEMO_SCENARIO_ID,
+            "Intake ID": "HR-DEMO-003",
+            "Submitted": now,
+            "New Hire Name": "Executive Admin",
+            "Department": "Executives",
+            "Job Title": "Executive Assistant",
+            "Location": "New York",
+            "Employment Type": "Full-Time",
+            "Start Date": str(datetime.now().date()),
+            "Recommended Access Package": "Executive Support Access",
+            "Approval Workflow": "Executive Approval + Security Review",
+            "Risk Level": "High",
+            "Provisioning Action": "Create account, assign Executive Support group, require MFA and security review",
+            "Intake Status": "Approval Ticket Created",
+            "Ticket Created": "Yes"
+        }
+    ]
+
+    approval_demo_records = [
+        {
+            "Scenario ID": DEMO_SCENARIO_ID,
+            "Ticket ID": "IAM-DEMO-001",
+            "Created": now,
+            "Lifecycle Stage": "Joiner",
+            "Employee": "Jordan Williams",
+            "Request Type": "HR New Hire Access Request",
+            "Access Package / Control": "Finance Core Access",
+            "Approval Owner": "Finance Manager Approval",
+            "Risk Level": "Medium",
+            "Recommended Action": "Create account, assign Finance group, grant finance application access",
+            "Ticket Status": "Approved",
+            "Provisioning Status": "Ready for Provisioning",
+            "Decision Source": "IdentityOS Workflow Engine"
+        },
+        {
+            "Scenario ID": DEMO_SCENARIO_ID,
+            "Ticket ID": "IAM-DEMO-002",
+            "Created": now,
+            "Lifecycle Stage": "Mover",
+            "Employee": "Finance to Executives Employee",
+            "Request Type": "Access Change Request",
+            "Access Package / Control": "Executive Support Access",
+            "Approval Owner": "Executive Approval + Security Review",
+            "Risk Level": "High",
+            "Recommended Action": "Remove 'Finance Core Access' and assign 'Executive Support Access' after approval workflow: Executive Approval + Security Review",
+            "Ticket Status": "Pending Approval",
+            "Provisioning Status": "Not Started",
+            "Decision Source": "IdentityOS Workflow Engine"
+        },
+        {
+            "Scenario ID": DEMO_SCENARIO_ID,
+            "Ticket ID": "IAM-DEMO-003",
+            "Created": now,
+            "Lifecycle Stage": "Leaver",
+            "Employee": "Marcus Lee",
+            "Request Type": "Offboarding Control Request",
+            "Access Package / Control": "Finance Core Access",
+            "Approval Owner": "HR + IAM + Security",
+            "Risk Level": "High",
+            "Recommended Action": "Disable account immediately, revoke active sessions, remove all group memberships, block sign-in, preserve mailbox/data for investigation, and notify Security.",
+            "Ticket Status": "Approved",
+            "Provisioning Status": "Ready for Provisioning",
+            "Decision Source": "IdentityOS Workflow Engine"
+        }
+    ]
+
+    provisioning_demo_records = [
+        {
+            "Scenario ID": DEMO_SCENARIO_ID,
+            "Timestamp": now,
+            "Ticket ID": "IAM-DEMO-001",
+            "Lifecycle Stage": "Joiner",
+            "Employee": "Jordan Williams",
+            "Access Package / Control": "Finance Core Access",
+            "Risk Level": "Medium",
+            "Execution Result": "Successful",
+            "Final Provisioning Status": "Provisioned",
+            "Provisioning Notes": "Demo provisioning completed for Finance Analyst onboarding.",
+            "Decision Source": "IdentityOS Provisioning Action Center"
+        },
+        {
+            "Scenario ID": DEMO_SCENARIO_ID,
+            "Timestamp": now,
+            "Ticket ID": "IAM-DEMO-003",
+            "Lifecycle Stage": "Leaver",
+            "Employee": "Marcus Lee",
+            "Access Package / Control": "Finance Core Access",
+            "Risk Level": "High",
+            "Execution Result": "Successful",
+            "Final Provisioning Status": "Access Removed",
+            "Provisioning Notes": "Demo high-risk leaver offboarding completed.",
+            "Decision Source": "IdentityOS Provisioning Action Center"
+        }
+    ]
+
+    joiner_demo_records = [
+        {
+            "Scenario ID": DEMO_SCENARIO_ID,
+            "Timestamp": now,
+            "Department": "Finance",
+            "Job Title": "Finance Analyst",
+            "Recommended Access Package": "Finance Core Access",
+            "Approval Workflow": "Finance Manager Approval",
+            "Risk Level": "Medium",
+            "Provisioning Action": "Create account, assign Finance group, grant finance application access",
+            "Decision Source": "IdentityOS Policy Engine"
+        },
+        {
+            "Scenario ID": DEMO_SCENARIO_ID,
+            "Timestamp": now,
+            "Department": "Executives",
+            "Job Title": "Executive Assistant",
+            "Recommended Access Package": "Executive Support Access",
+            "Approval Workflow": "Executive Approval + Security Review",
+            "Risk Level": "High",
+            "Provisioning Action": "Create account, assign Executive Support group, require MFA and security review",
+            "Decision Source": "IdentityOS Policy Engine"
+        }
+    ]
+
+    mover_demo_records = [
+        {
+            "Scenario ID": DEMO_SCENARIO_ID,
+            "Timestamp": now,
+            "Current Department": "Finance",
+            "Current Job Title": "Finance Analyst",
+            "New Department": "Executives",
+            "New Job Title": "Executive Assistant",
+            "Current Access Package": "Finance Core Access",
+            "New Access Package": "Executive Support Access",
+            "Mover Decision": "Access Package Change Required",
+            "Recommended Action": "Remove 'Finance Core Access' and assign 'Executive Support Access' after approval workflow: Executive Approval + Security Review",
+            "New Risk Level": "High",
+            "Decision Source": "IdentityOS Mover Workflow Engine"
+        }
+    ]
+
+    leaver_demo_records = [
+        {
+            "Scenario ID": DEMO_SCENARIO_ID,
+            "Timestamp": now,
+            "Employee": "Marcus Lee",
+            "Department": "Finance",
+            "Job Title": "Finance Analyst",
+            "Access Package Removed": "Finance Core Access",
+            "Departure Type": "High Risk Termination",
+            "Leaver Risk Level": "High",
+            "Leaver Priority": "Immediate Offboarding Required",
+            "Recommended Action": "Disable account immediately, revoke active sessions, remove all group memberships, block sign-in, preserve mailbox/data for investigation, and notify Security.",
+            "Decision Source": "IdentityOS Leaver Workflow Engine"
+        }
+    ]
+
+    review_items = [
+        {
+            "Source": "Approval Queue",
+            "Employee": "Executive Admin",
+            "Lifecycle Stage": "Joiner",
+            "Access Package / Control": "Executive Support Access",
+            "Risk Level": "High",
+            "Current Status": "Pending Approval",
+            "Reviewer": "Executive Approval + Security Review",
+            "Review Reason": "High-risk approval ticket requires validation",
+            "Recommended Review Action": "Security review required",
+        },
+        {
+            "Source": "Mover Audit Log",
+            "Employee": "Finance to Executives Employee",
+            "Lifecycle Stage": "Mover",
+            "Access Package / Control": "Executive Support Access",
+            "Risk Level": "High",
+            "Current Status": "Access Package Change Required",
+            "Reviewer": "IAM Governance",
+            "Review Reason": "Role change requires access creep review",
+            "Recommended Review Action": "Confirm prior access was removed and new access is appropriate",
+        },
+        {
+            "Source": "Leaver Audit Log",
+            "Employee": "Marcus Lee",
+            "Lifecycle Stage": "Leaver",
+            "Access Package / Control": "Finance Core Access",
+            "Risk Level": "High",
+            "Current Status": "Immediate Offboarding Required",
+            "Reviewer": "HR + Security + IAM",
+            "Review Reason": "Offboarding access removal verification",
+            "Recommended Review Action": "Confirm account disablement, access removal, and session revocation",
+        }
+    ]
+
+    access_review_campaign_demo_records = [
+        {
+            "Scenario ID": DEMO_SCENARIO_ID,
+            "Campaign ID": "ARC-DEMO-001",
+            "Created": now,
+            "Campaign Name": "Quarterly Identity Access Review",
+            "Campaign Scope": "All Access",
+            "Campaign Owner": "IAM Governance",
+            "Review Due Date": str(datetime.now().date()),
+            "Candidate Count": len(review_items),
+            "High Risk Candidates": 3,
+            "Campaign Status": "In Progress",
+            "Review Items": review_items,
+            "Decision Source": "IdentityOS Access Review Campaign Center"
+        }
+    ]
+
+    access_review_decision_demo_records = [
+        {
+            "Scenario ID": DEMO_SCENARIO_ID,
+            "Decision ID": "ARD-DEMO-001",
+            "Timestamp": now,
+            "Campaign ID": "ARC-DEMO-001",
+            "Campaign Name": "Quarterly Identity Access Review",
+            "Employee": "Executive Admin",
+            "Lifecycle Stage": "Joiner",
+            "Access Package / Control": "Executive Support Access",
+            "Risk Level": "High",
+            "Reviewer": "Executive Approval + Security Review",
+            "Review Decision": "Escalate to Security",
+            "Review Notes": "High-value user access requires security validation before certification.",
+            "Decision Source": "IdentityOS Access Review Campaign Center"
+        },
+        {
+            "Scenario ID": DEMO_SCENARIO_ID,
+            "Decision ID": "ARD-DEMO-002",
+            "Timestamp": now,
+            "Campaign ID": "ARC-DEMO-001",
+            "Campaign Name": "Quarterly Identity Access Review",
+            "Employee": "Marcus Lee",
+            "Lifecycle Stage": "Leaver",
+            "Access Package / Control": "Finance Core Access",
+            "Risk Level": "High",
+            "Reviewer": "HR + Security + IAM",
+            "Review Decision": "Revoke Access",
+            "Review Notes": "Access removal confirmed for high-risk leaver scenario.",
+            "Decision Source": "IdentityOS Access Review Campaign Center"
+        }
+    ]
+
+    st.session_state.hr_identity_intake_queue.extend(hr_demo_records)
+    st.session_state.approval_queue.extend(approval_demo_records)
+    st.session_state.provisioning_history.extend(provisioning_demo_records)
+    st.session_state.access_decision_audit_log.extend(joiner_demo_records)
+    st.session_state.mover_audit_log.extend(mover_demo_records)
+    st.session_state.leaver_audit_log.extend(leaver_demo_records)
+    st.session_state.access_review_campaigns.extend(access_review_campaign_demo_records)
+    st.session_state.access_review_decisions.extend(access_review_decision_demo_records)
+
+    record_persistence_event(
+        "Demo Scenario Loaded",
+        "IdentityOS full lifecycle demo scenario loaded into session state."
+    )
+
+    save_identityos_state_to_disk()
+
+
+demo_col1, demo_col2, demo_col3 = st.columns(3)
+
+with demo_col1:
+    if st.button("Load Full Demo Scenario", key="load_full_demo_scenario"):
+        if demo_records_exist():
+            st.warning("The demo scenario is already loaded.")
+        else:
+            load_identityos_demo_scenario()
+            st.success("Full IdentityOS demo scenario loaded and saved to disk.")
+
+with demo_col2:
+    if st.button("Reset Demo Scenario Records", key="reset_demo_scenario_records"):
+        remove_demo_records_from_state()
+        record_persistence_event(
+            "Demo Scenario Reset",
+            "IdentityOS demo scenario records removed from session state."
+        )
+        save_identityos_state_to_disk()
+        st.success("Demo scenario records removed and state saved to disk.")
+
+with demo_col3:
+    demo_status = "Loaded" if demo_records_exist() else "Not Loaded"
+    st.metric("Demo Scenario", demo_status)
+
+st.info(
+    "Demo Tip: Load the full scenario before presenting IdentityOS. It will populate "
+    "the platform with realistic HR intake, approval, provisioning, governance, access "
+    "review, and reporting evidence so the dashboard looks active immediately."
+)
+
+st.markdown("---")
 header_col1, header_col2 = st.columns([1, 5])
 
 with header_col1:

@@ -1,1 +1,53 @@
-[]
+[
+    {
+        "Scenario ID": "IDENTITYOS_DEMO_001",
+        "Intake ID": "HR-DEMO-001",
+        "Submitted": "2026-06-29 11:33:31",
+        "New Hire Name": "Jordan Williams",
+        "Department": "Finance",
+        "Job Title": "Finance Analyst",
+        "Location": "Orlando",
+        "Employment Type": "Full-Time",
+        "Start Date": "2026-06-29",
+        "Recommended Access Package": "Finance Core Access",
+        "Approval Workflow": "Finance Manager Approval",
+        "Risk Level": "Medium",
+        "Provisioning Action": "Create account, assign Finance group, grant finance application access",
+        "Intake Status": "Approval Ticket Created",
+        "Ticket Created": "Yes"
+    },
+    {
+        "Scenario ID": "IDENTITYOS_DEMO_001",
+        "Intake ID": "HR-DEMO-002",
+        "Submitted": "2026-06-29 11:33:31",
+        "New Hire Name": "Alicia Brown",
+        "Department": "HR",
+        "Job Title": "HR Specialist",
+        "Location": "Remote",
+        "Employment Type": "Full-Time",
+        "Start Date": "2026-06-29",
+        "Recommended Access Package": "HR Core Access",
+        "Approval Workflow": "Manager Approval",
+        "Risk Level": "Low",
+        "Provisioning Action": "Create account, assign HR group, grant HR application access",
+        "Intake Status": "Submitted",
+        "Ticket Created": "No"
+    },
+    {
+        "Scenario ID": "IDENTITYOS_DEMO_001",
+        "Intake ID": "HR-DEMO-003",
+        "Submitted": "2026-06-29 11:33:31",
+        "New Hire Name": "Executive Admin",
+        "Department": "Executives",
+        "Job Title": "Executive Assistant",
+        "Location": "New York",
+        "Employment Type": "Full-Time",
+        "Start Date": "2026-06-29",
+        "Recommended Access Package": "Executive Support Access",
+        "Approval Workflow": "Executive Approval + Security Review",
+        "Risk Level": "High",
+        "Provisioning Action": "Create account, assign Executive Support group, require MFA and security review",
+        "Intake Status": "Approval Ticket Created",
+        "Ticket Created": "Yes"
+    }
+]
