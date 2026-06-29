@@ -25,6 +25,8 @@ IDENTITYOS_STATE_FILES = {
     "mover_audit_log": IDENTITYOS_STATE_DIR / "mover-audit-log.json",
     "leaver_audit_log": IDENTITYOS_STATE_DIR / "leaver-audit-log.json",
     "identityos_persistence_events": IDENTITYOS_STATE_DIR / "persistence-events.json",
+    "access_review_campaigns": IDENTITYOS_STATE_DIR / "access-review-campaigns.json",
+    "access_review_decisions": IDENTITYOS_STATE_DIR / "access-review-decisions.json",
 }
 st.set_page_config(
     page_title="IdentityOS Dashboard Prototype",
@@ -2906,4 +2908,421 @@ st.info(
     "records to be exported for governance reviews, security investigations, compliance "
     "evidence, and executive IAM reporting. In a production environment, these exports "
     "could be scheduled, sent to secure storage, or integrated with GRC platforms."
+)
+# ------------------------------------------------------------
+# IdentityOS - Access Review Campaign Center
+# ------------------------------------------------------------
+
+st.markdown("---")
+st.header("IdentityOS Access Review Campaign Center")
+
+st.markdown(
+    """
+    This section simulates periodic access review campaigns across IdentityOS.
+    Access reviews help IAM, Security, HR, and managers validate whether users
+    should retain, modify, or lose access based on business need, risk level,
+    lifecycle activity, and governance evidence.
+    """
+)
+
+if "access_review_campaigns" not in st.session_state:
+    st.session_state.access_review_campaigns = []
+
+if "access_review_decisions" not in st.session_state:
+    st.session_state.access_review_decisions = []
+
+
+def build_access_review_candidates():
+    """Build access review candidates from current IdentityOS workflow records."""
+    candidates = []
+
+    approval_records = st.session_state.get("approval_queue", [])
+    provisioning_records = st.session_state.get("provisioning_history", [])
+    mover_records = st.session_state.get("mover_audit_log", [])
+    leaver_records = st.session_state.get("leaver_audit_log", [])
+    hr_records = st.session_state.get("hr_identity_intake_queue", [])
+
+    for ticket in approval_records:
+        lifecycle_stage = ticket.get("Lifecycle Stage", "Unknown")
+        risk_level = ticket.get("Risk Level", "Unknown")
+        ticket_status = ticket.get("Ticket Status", "Unknown")
+        provisioning_status = ticket.get("Provisioning Status", "Unknown")
+
+        if risk_level == "High":
+            review_reason = "High-risk approval ticket requires validation"
+            recommended_review_action = "Security review required"
+        elif lifecycle_stage == "Mover":
+            review_reason = "Mover access change should be reviewed for access creep"
+            recommended_review_action = "Validate old access removal and new access need"
+        elif provisioning_status in ["Provisioned", "Access Removed"]:
+            review_reason = "Post-provisioning validation required"
+            recommended_review_action = "Confirm final access state"
+        else:
+            review_reason = "Standard access approval review"
+            recommended_review_action = "Manager validation recommended"
+
+        candidates.append(
+            {
+                "Source": "Approval Queue",
+                "Employee": ticket.get("Employee", "Unknown"),
+                "Lifecycle Stage": lifecycle_stage,
+                "Access Package / Control": ticket.get("Access Package / Control", "Unknown"),
+                "Risk Level": risk_level,
+                "Current Status": ticket_status,
+                "Reviewer": ticket.get("Approval Owner", "IAM Governance"),
+                "Review Reason": review_reason,
+                "Recommended Review Action": recommended_review_action,
+            }
+        )
+
+    for record in provisioning_records:
+        if record.get("Execution Result") in ["Failed", "Partially Completed", "Requires Manual Review"]:
+            candidates.append(
+                {
+                    "Source": "Provisioning History",
+                    "Employee": record.get("Employee", "Unknown"),
+                    "Lifecycle Stage": record.get("Lifecycle Stage", "Unknown"),
+                    "Access Package / Control": record.get("Access Package / Control", "Unknown"),
+                    "Risk Level": record.get("Risk Level", "Unknown"),
+                    "Current Status": record.get("Execution Result", "Unknown"),
+                    "Reviewer": "IAM Engineering",
+                    "Review Reason": "Provisioning exception requires review",
+                    "Recommended Review Action": "Investigate execution result and validate access state",
+                }
+            )
+
+    for record in mover_records:
+        candidates.append(
+            {
+                "Source": "Mover Audit Log",
+                "Employee": f"{record.get('Current Department', 'Unknown')} to {record.get('New Department', 'Unknown')} Employee",
+                "Lifecycle Stage": "Mover",
+                "Access Package / Control": record.get("New Access Package", "Unknown"),
+                "Risk Level": record.get("New Risk Level", "Unknown"),
+                "Current Status": record.get("Mover Decision", "Unknown"),
+                "Reviewer": "IAM Governance",
+                "Review Reason": "Role change requires access creep review",
+                "Recommended Review Action": "Confirm prior access was removed and new access is appropriate",
+            }
+        )
+
+    for record in leaver_records:
+        candidates.append(
+            {
+                "Source": "Leaver Audit Log",
+                "Employee": record.get("Employee", "Unknown"),
+                "Lifecycle Stage": "Leaver",
+                "Access Package / Control": record.get("Access Package Removed", "Unknown"),
+                "Risk Level": record.get("Leaver Risk Level", "Unknown"),
+                "Current Status": record.get("Leaver Priority", "Unknown"),
+                "Reviewer": "HR + Security + IAM",
+                "Review Reason": "Offboarding access removal verification",
+                "Recommended Review Action": "Confirm account disablement, access removal, and session revocation",
+            }
+        )
+
+    for record in hr_records:
+        if record.get("Risk Level") == "High" or record.get("Recommended Access Package") == "Manual Review Required":
+            candidates.append(
+                {
+                    "Source": "HR Identity Intake",
+                    "Employee": record.get("New Hire Name", "Unknown"),
+                    "Lifecycle Stage": "Joiner",
+                    "Access Package / Control": record.get("Recommended Access Package", "Unknown"),
+                    "Risk Level": record.get("Risk Level", "Unknown"),
+                    "Current Status": record.get("Intake Status", "Unknown"),
+                    "Reviewer": record.get("Approval Workflow", "IAM Governance"),
+                    "Review Reason": "High-risk or manual-review HR intake",
+                    "Recommended Review Action": "Validate access package before provisioning",
+                }
+            )
+
+    if not candidates:
+        candidates = [
+            {
+                "Source": "Sample Review Population",
+                "Employee": "Alicia Brown",
+                "Lifecycle Stage": "Joiner",
+                "Access Package / Control": "HR Core Access",
+                "Risk Level": "Low",
+                "Current Status": "Provisioned",
+                "Reviewer": "HR Manager",
+                "Review Reason": "Quarterly access certification sample",
+                "Recommended Review Action": "Manager validation recommended",
+            },
+            {
+                "Source": "Sample Review Population",
+                "Employee": "Marcus Lee",
+                "Lifecycle Stage": "Joiner",
+                "Access Package / Control": "Finance Core Access",
+                "Risk Level": "Medium",
+                "Current Status": "Provisioned",
+                "Reviewer": "Finance Manager",
+                "Review Reason": "Quarterly finance access review sample",
+                "Recommended Review Action": "Validate business need",
+            },
+            {
+                "Source": "Sample Review Population",
+                "Employee": "Executive Admin",
+                "Lifecycle Stage": "Joiner",
+                "Access Package / Control": "Executive Support Access",
+                "Risk Level": "High",
+                "Current Status": "Provisioned",
+                "Reviewer": "Executive Leadership + Security",
+                "Review Reason": "High-value user access requires enhanced review",
+                "Recommended Review Action": "Security review required",
+            },
+        ]
+
+    return candidates
+
+
+st.write("### Create Access Review Campaign")
+
+campaign_col1, campaign_col2 = st.columns(2)
+
+with campaign_col1:
+    access_review_campaign_name = st.text_input(
+        "Campaign Name",
+        value="Quarterly Identity Access Review",
+        key="access_review_campaign_name"
+    )
+
+    access_review_scope = st.selectbox(
+        "Campaign Scope",
+        [
+            "All Access",
+            "High Risk Access",
+            "Mover Access Changes",
+            "Provisioning Exceptions",
+            "Leaver Offboarding Verification",
+            "HR Intake Manual Reviews"
+        ],
+        key="access_review_scope"
+    )
+
+with campaign_col2:
+    access_review_owner = st.selectbox(
+        "Campaign Owner",
+        [
+            "IAM Governance",
+            "IAM Operations",
+            "Security Leadership",
+            "HR + IAM",
+            "Compliance"
+        ],
+        key="access_review_owner"
+    )
+
+    access_review_due_date = st.date_input(
+        "Review Due Date",
+        key="access_review_due_date"
+    )
+
+access_review_candidates = build_access_review_candidates()
+access_review_candidates_df = pd.DataFrame(access_review_candidates)
+
+st.write("### Current Review Candidate Population")
+st.dataframe(access_review_candidates_df, use_container_width=True)
+
+candidate_metric_col1, candidate_metric_col2, candidate_metric_col3 = st.columns(3)
+
+with candidate_metric_col1:
+    st.metric("Review Candidates", len(access_review_candidates_df))
+
+with candidate_metric_col2:
+    high_risk_candidates = access_review_candidates_df[
+        access_review_candidates_df["Risk Level"] == "High"
+    ].shape[0]
+    st.metric("High Risk Candidates", high_risk_candidates)
+
+with candidate_metric_col3:
+    manual_review_candidates = access_review_candidates_df[
+        access_review_candidates_df["Recommended Review Action"].astype(str).str.contains(
+            "review", case=False, na=False
+        )
+    ].shape[0]
+    st.metric("Review Actions", manual_review_candidates)
+
+if st.button("Generate Access Review Campaign"):
+    campaign_id = f"ARC-{datetime.now().strftime('%Y%m%d%H%M%S')}-{len(st.session_state.access_review_campaigns) + 1}"
+
+    campaign_record = {
+        "Campaign ID": campaign_id,
+        "Created": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "Campaign Name": access_review_campaign_name,
+        "Campaign Scope": access_review_scope,
+        "Campaign Owner": access_review_owner,
+        "Review Due Date": str(access_review_due_date),
+        "Candidate Count": len(access_review_candidates),
+        "High Risk Candidates": int(high_risk_candidates),
+        "Campaign Status": "Open",
+        "Review Items": access_review_candidates,
+        "Decision Source": "IdentityOS Access Review Campaign Center"
+    }
+
+    st.session_state.access_review_campaigns.append(campaign_record)
+
+    st.success(f"Access review campaign created: {campaign_id}")
+
+if st.session_state.access_review_campaigns:
+    st.write("### Access Review Campaigns")
+
+    campaign_summary_records = []
+
+    for campaign in st.session_state.access_review_campaigns:
+        campaign_summary_records.append(
+            {
+                "Campaign ID": campaign.get("Campaign ID"),
+                "Campaign Name": campaign.get("Campaign Name"),
+                "Campaign Scope": campaign.get("Campaign Scope"),
+                "Campaign Owner": campaign.get("Campaign Owner"),
+                "Review Due Date": campaign.get("Review Due Date"),
+                "Candidate Count": campaign.get("Candidate Count"),
+                "High Risk Candidates": campaign.get("High Risk Candidates"),
+                "Campaign Status": campaign.get("Campaign Status"),
+            }
+        )
+
+    campaign_summary_df = pd.DataFrame(campaign_summary_records)
+    st.dataframe(campaign_summary_df, use_container_width=True)
+
+    selected_campaign_id = st.selectbox(
+        "Select Campaign for Review Decisions",
+        campaign_summary_df["Campaign ID"].tolist(),
+        key="selected_access_review_campaign"
+    )
+
+    selected_campaign = next(
+        campaign
+        for campaign in st.session_state.access_review_campaigns
+        if campaign.get("Campaign ID") == selected_campaign_id
+    )
+
+    selected_campaign_items = selected_campaign.get("Review Items", [])
+    selected_campaign_items_df = pd.DataFrame(selected_campaign_items)
+
+    st.write("### Selected Campaign Review Items")
+    st.dataframe(selected_campaign_items_df, use_container_width=True)
+
+    review_item_labels = [
+        f"{item.get('Employee', 'Unknown')} | {item.get('Access Package / Control', 'Unknown')} | {item.get('Risk Level', 'Unknown')}"
+        for item in selected_campaign_items
+    ]
+
+    selected_review_item_label = st.selectbox(
+        "Select Review Item",
+        review_item_labels,
+        key="selected_access_review_item"
+    )
+
+    selected_review_index = review_item_labels.index(selected_review_item_label)
+    selected_review_item = selected_campaign_items[selected_review_index]
+
+    review_decision = st.selectbox(
+        "Review Decision",
+        [
+            "Approve / Retain Access",
+            "Revoke Access",
+            "Modify Access",
+            "Escalate to Security",
+            "Requires Additional Evidence"
+        ],
+        key="access_review_decision"
+    )
+
+    review_notes = st.text_area(
+        "Review Notes",
+        value="Access reviewed as part of IdentityOS campaign simulation.",
+        key="access_review_notes"
+    )
+
+    if st.button("Record Access Review Decision"):
+        review_decision_id = f"ARD-{datetime.now().strftime('%Y%m%d%H%M%S')}-{len(st.session_state.access_review_decisions) + 1}"
+
+        decision_record = {
+            "Decision ID": review_decision_id,
+            "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "Campaign ID": selected_campaign_id,
+            "Campaign Name": selected_campaign.get("Campaign Name"),
+            "Employee": selected_review_item.get("Employee"),
+            "Lifecycle Stage": selected_review_item.get("Lifecycle Stage"),
+            "Access Package / Control": selected_review_item.get("Access Package / Control"),
+            "Risk Level": selected_review_item.get("Risk Level"),
+            "Reviewer": selected_review_item.get("Reviewer"),
+            "Review Decision": review_decision,
+            "Review Notes": review_notes,
+            "Decision Source": "IdentityOS Access Review Campaign Center"
+        }
+
+        st.session_state.access_review_decisions.append(decision_record)
+
+        campaign_decisions = [
+            decision
+            for decision in st.session_state.access_review_decisions
+            if decision.get("Campaign ID") == selected_campaign_id
+        ]
+
+        reviewed_employees = set(
+            decision.get("Employee") for decision in campaign_decisions
+        )
+
+        for campaign in st.session_state.access_review_campaigns:
+            if campaign.get("Campaign ID") == selected_campaign_id:
+                if len(reviewed_employees) >= campaign.get("Candidate Count", 0):
+                    campaign["Campaign Status"] = "Completed"
+                else:
+                    campaign["Campaign Status"] = "In Progress"
+
+        st.success(f"Access review decision recorded: {review_decision_id}")
+
+if st.session_state.access_review_decisions:
+    st.write("### Access Review Decision Log")
+
+    access_review_decisions_df = pd.DataFrame(st.session_state.access_review_decisions)
+    st.dataframe(access_review_decisions_df, use_container_width=True)
+
+    review_metric_col1, review_metric_col2, review_metric_col3 = st.columns(3)
+
+    with review_metric_col1:
+        st.metric("Review Decisions", len(access_review_decisions_df))
+
+    with review_metric_col2:
+        revoke_count = access_review_decisions_df[
+            access_review_decisions_df["Review Decision"] == "Revoke Access"
+        ].shape[0]
+        st.metric("Revocations Recommended", revoke_count)
+
+    with review_metric_col3:
+        escalation_count = access_review_decisions_df[
+            access_review_decisions_df["Review Decision"] == "Escalate to Security"
+        ].shape[0]
+        st.metric("Security Escalations", escalation_count)
+
+    review_decision_summary = (
+        access_review_decisions_df.groupby(["Review Decision"])
+        .size()
+        .reset_index(name="Decision Count")
+    )
+
+    st.write("### Access Review Decision Breakdown")
+    st.dataframe(review_decision_summary, use_container_width=True)
+
+    review_decision_chart = px.bar(
+        review_decision_summary,
+        x="Review Decision",
+        y="Decision Count",
+        title="IdentityOS Access Review Decisions"
+    )
+
+    st.plotly_chart(review_decision_chart, use_container_width=True)
+
+else:
+    st.warning("No access review decisions have been recorded yet.")
+
+st.info(
+    "IAM Governance Note: Access review campaigns help prevent access creep, validate "
+    "business need, confirm offboarding completion, and provide evidence for auditors. "
+    "In a production environment, IdentityOS could integrate this workflow with Entra ID "
+    "Access Reviews, ServiceNow, GRC platforms, or manager certification workflows."
 )
