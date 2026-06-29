@@ -1,172 +1,338 @@
-# IdentityOS Streamlit Dashboard Prototype
+# IdentityOS
 
-## Purpose
+**IdentityOS** is a simulated identity operations platform built to demonstrate how modern Identity and Access Management teams can manage workforce identity lifecycle events, access approvals, provisioning workflows, governance evidence, and executive reporting.
 
-This folder contains the first interactive dashboard prototype for IdentityOS.
-
-The prototype uses Streamlit to transform IdentityOS sample metrics into an interactive dashboard view for identity lifecycle activity, governance, risk scoring, access drift, automation health, and report visibility.
-
-The goal is to demonstrate how IdentityOS can move from static architecture documentation into an operational identity dashboard.
+The project models an end-to-end IAM operating system where HR identity intake, Joiner/Mover/Leaver workflows, access package recommendations, approval tickets, provisioning actions, access reviews, and audit evidence all connect into one command center.
 
 ---
 
-## IdentityOS Core Integration
+## Project Purpose
 
-The Streamlit dashboard now connects to IdentityOS Core output.
+IdentityOS was built as a hands-on IAM architecture portfolio project.
 
-IdentityOS Core processes sample identity lifecycle events and generates dashboard-ready output for:
+The goal is to demonstrate how an identity platform can:
 
-* Events processed
-* Tickets created
-* Approvals required
-* Access drift detected
-* Risk counts
-* Event type counts
-* Generated audit evidence paths
-* Generated ticket output paths
-
-The dashboard includes an **IdentityOS Core Output** view that displays the results of the simulated IAM operating system engine.
-
-This connects the dashboard prototype to the working IdentityOS Core event processor.
-
-## Core Output Flow
-
-```text id="uwyytl"
-identityos-core/data/sample-hr-events.json
-        ↓
-identityos-core/engine/process-identity-event.py
-        ↓
-identityos-core/outputs/tickets/tickets.json
-identityos-core/outputs/evidence/audit-evidence.json
-identityos-core/outputs/dashboard/dashboard-output.json
-        ↓
-dashboard/streamlit-prototype/app.py
-```
-
-## Running the Core Processor
-
-Before viewing the IdentityOS Core Output dashboard, run:
-
-```powershell id="oz75k5"
-.\.venv\Scripts\python.exe identityos-core\engine\process-identity-event.py
-```
-
-Then launch the dashboard:
-
-```powershell id="v7f30t"
-.\.venv\Scripts\streamlit.exe run dashboard\streamlit-prototype\app.py
-```
-
-Select **IdentityOS Core Output** from the sidebar.
-
-
-## Current Prototype Capabilities
-
-The current Streamlit prototype includes:
-
-* Executive identity risk overview
-* Sample identity count
-* Policy decision count
-* High-risk decision count
-* Critical-risk decision count
-* Lifecycle operations tab
-* Governance metrics tab
-* Risk scoring metrics tab
-* Access drift metrics tab
-* Automation health tab
-* Generated reports tab
+* Capture new hire identity details from HR
+* Evaluate workforce attributes such as department, job title, location, and employment type
+* Recommend access packages based on policy logic
+* Assign approval workflows and risk levels
+* Generate approval tickets
+* Track provisioning readiness
+* Simulate account creation, access assignment, access removal, and offboarding
+* Record audit evidence across the identity lifecycle
+* Support access review campaigns and certification decisions
+* Export evidence for governance, security, and audit review
 
 ---
 
-## Data Source
+## Core Platform Modules
 
-The prototype reads dashboard metrics from:
+### IdentityOS Product Header
+
+The application includes a branded IdentityOS header, logo, version banner, and system status indicators.
+
+Current version:
+
+**IdentityOS v0.2 — Lifecycle Workflow, Governance, Reporting, and Persistence Prototype**
+
+---
+
+### Demo Scenario Launcher
+
+The Demo Scenario Launcher allows users to instantly populate the platform with a complete sample identity lifecycle scenario.
+
+This includes:
+
+* HR intake records
+* Approval tickets
+* Provisioning history
+* Joiner audit logs
+* Mover audit logs
+* Leaver audit logs
+* Access review campaigns
+* Access review decisions
+* Reporting and evidence export data
+
+This makes the platform demo-ready without requiring manual data entry.
+
+---
+
+### HR New Hire Onboarding Workflow
+
+This module simulates the HR front door for the Joiner lifecycle.
+
+HR can submit a new hire into IdentityOS, and the platform evaluates the user’s workforce attributes to recommend access, assign risk, determine approval routing, and prepare provisioning actions.
+
+The workflow shows:
+
+* New Hire Profile
+* IdentityOS Decision
+* Recommended Access Package
+* Approval Workflow
+* Risk Level
+* Provisioning Action
+* Joiner Lifecycle Timeline
+* Manual Process vs IdentityOS Process
+* Audit Evidence Preview
+
+---
+
+### Access Package Policy Engine
+
+The Access Package Policy Engine maps workforce attributes to standardized access packages.
+
+Example mappings include:
+
+* HR Specialist → HR Core Access
+* Finance Analyst → Finance Core Access
+* Security Analyst → Security Operations Access
+* IT Support Technician → IT Support Access
+* Executive Assistant → Executive Support Access
+
+If IdentityOS cannot match the department and job title, the access request is routed to manual IAM review.
+
+---
+
+### Joiner Access Decision Audit Log
+
+IdentityOS records access recommendation decisions for audit visibility.
+
+The audit log captures:
+
+* Timestamp
+* Department
+* Job Title
+* Recommended Access Package
+* Approval Workflow
+* Risk Level
+* Provisioning Action
+* Decision Source
+
+---
+
+### Mover Workflow Engine
+
+The Mover Workflow Engine simulates what happens when an employee changes departments or job roles.
+
+IdentityOS compares the employee’s current access package to the future-state access package and determines whether access should be retained, removed, assigned, or reviewed.
+
+This helps demonstrate access creep prevention.
+
+---
+
+### Leaver Workflow Engine
+
+The Leaver Workflow Engine simulates employee offboarding.
+
+IdentityOS evaluates the employee’s current access, department, role, and departure type to recommend offboarding actions.
+
+The workflow supports:
+
+* Standard offboarding
+* Immediate high-risk offboarding
+* Account disablement
+* Access package removal
+* Group membership removal
+* Active session revocation
+* Audit evidence capture
+
+---
+
+### Approval Queue and Ticketing Simulation
+
+IdentityOS converts lifecycle decisions into approval tickets.
+
+Tickets include:
+
+* Ticket ID
+* Lifecycle Stage
+* Employee
+* Request Type
+* Access Package or Control
+* Approval Owner
+* Risk Level
+* Recommended Action
+* Ticket Status
+* Provisioning Status
+
+This simulates the bridge between identity governance decisions and operational ticketing workflows.
+
+---
+
+### Provisioning Action Center
+
+The Provisioning Action Center simulates execution of approved IAM actions.
+
+Once a ticket is approved and marked ready for provisioning, IdentityOS displays the required provisioning steps and records the execution result.
+
+Supported lifecycle actions include:
+
+* Joiner provisioning
+* Mover access changes
+* Leaver access removal
+* Manual review outcomes
+
+---
+
+### Governance Control Center
+
+The Governance Control Center provides a consolidated view of identity governance posture.
+
+It summarizes:
+
+* Open approvals
+* High-risk identity events
+* Manual reviews
+* Provisioning failures
+* Immediate offboarding items
+* Audit evidence records
+* Governance health score
+* Operational response plan
+
+This module supports executive-level identity risk reporting.
+
+---
+
+### Access Review Campaign Center
+
+IdentityOS includes an access certification workflow that simulates periodic access reviews.
+
+The Access Review Campaign Center can generate review campaigns, identify review candidates, and record reviewer decisions.
+
+Review decisions include:
+
+* Approve / Retain Access
+* Revoke Access
+* Modify Access
+* Escalate to Security
+* Requires Additional Evidence
+
+This demonstrates identity governance capabilities such as access certification, access creep review, high-risk access validation, and audit evidence retention.
+
+---
+
+### Reporting and Evidence Export Center
+
+The Reporting and Evidence Export Center allows IdentityOS workflow records to be exported for audit, governance, security, and executive reporting.
+
+Exportable evidence includes:
+
+* HR identity intakes
+* Approval queue records
+* Provisioning history
+* Joiner audit logs
+* Mover audit logs
+* Leaver audit logs
+* Access review campaigns
+* Access review decisions
+* Executive evidence summary
+
+Exports are available in CSV and JSON formats.
+
+---
+
+### Data Persistence Layer
+
+IdentityOS includes a local JSON persistence layer that allows workflow records to survive application restarts.
+
+Persisted data includes:
+
+* HR intakes
+* Approval tickets
+* Provisioning history
+* Joiner audit logs
+* Mover audit logs
+* Leaver audit logs
+* Access review campaigns
+* Access review decisions
+* Persistence events
+
+This moves IdentityOS beyond temporary session-only behavior and closer to platform-like operation.
+
+---
+
+## Technologies Used
+
+* Python
+* Streamlit
+* Pandas
+* Plotly
+* JSON
+* Git / GitHub
+* Local file-based persistence
+
+---
+
+## How to Run the Project
+
+From the Streamlit prototype folder, run:
+
+```powershell
+python -m streamlit run app.py
+```
+
+Project folder:
 
 ```text
-examples/sample-dashboard-metrics.json
+dashboard/streamlit-prototype
 ```
-
-This allows the dashboard to stay connected to the same sample data model used across the IdentityOS reports and dashboard design documentation.
 
 ---
 
-## How to Run Locally
+## Recommended Demo Flow
 
-From the root of the repository, create a virtual environment:
+1. Start IdentityOS.
+2. Click **Load Full Demo Scenario** near the top of the app.
+3. Review the HR New Hire Onboarding Workflow.
+4. Review the Approval Queue.
+5. Review the Provisioning Action Center.
+6. Review the Governance Control Center.
+7. Review the Access Review Campaign Center.
+8. Review the Reporting and Evidence Export Center.
+9. Download CSV or JSON evidence exports.
 
-```powershell
-python -m venv .venv
-```
-
-Install the required packages:
-
-```powershell
-.\.venv\Scripts\python.exe -m pip install -r dashboard\streamlit-prototype\requirements.txt
-```
-
-Run the dashboard:
-
-```powershell
-.\.venv\Scripts\streamlit.exe run dashboard\streamlit-prototype\app.py
-```
-
-The app should open in the browser at:
+This flow demonstrates the full lifecycle:
 
 ```text
-http://localhost:8501
+HR Intake
+↓
+Access Recommendation
+↓
+Approval Ticket
+↓
+Provisioning Action
+↓
+Governance Review
+↓
+Access Certification
+↓
+Evidence Export
 ```
 
 ---
 
-## Prototype Files
+## IAM Concepts Demonstrated
 
-| File               | Purpose                                            |
-| ------------------ | -------------------------------------------------- |
-| `app.py`           | Main Streamlit dashboard prototype.                |
-| `requirements.txt` | Python dependencies required to run the dashboard. |
-| `README.md`        | Documentation for the dashboard prototype.         |
+IdentityOS demonstrates several important IAM and identity governance concepts:
 
----
-
-## Relationship to IdentityOS
-
-This prototype connects to the broader IdentityOS architecture by visualizing:
-
-* Identity lifecycle events
-* Policy decisions
-* Governance metrics
-* Risk scoring outputs
-* Access drift findings
-* Automation health
-* Generated evidence reports
-
-It is not intended to replace Entra ID, IAM tools, governance platforms, or SIEM solutions.
-
-Instead, it demonstrates how IdentityOS could provide an orchestration and visibility layer across identity operations.
+* Joiner / Mover / Leaver lifecycle management
+* Role-based access package recommendations
+* Attribute-based access decision logic
+* Access approval workflows
+* Provisioning readiness tracking
+* Access creep prevention
+* Offboarding controls
+* High-risk identity event handling
+* Access review campaigns
+* Access certification decisions
+* Governance health scoring
+* Audit evidence retention
+* Evidence export for compliance and security review
 
 ---
 
-## Future Enhancements
+## Portfolio Summary
 
-Future versions may include:
+IdentityOS is a simulated identity lifecycle operations platform that connects HR intake, access package recommendations, approval ticketing, provisioning execution, access reviews, governance scoring, reporting, and audit evidence into one command center.
 
-* Interactive filters
-* Charts and visualizations
-* Drilldown views
-* Report previews
-* Risk trend analysis
-* Access drift heatmaps
-* Privileged access views
-* Contractor and vendor access views
-* Non-human identity views
-* Audit evidence views
-* Entra ID integration concepts
-* Microsoft Graph API sample actions
-
----
-
-## Summary
-
-The IdentityOS Streamlit Dashboard Prototype demonstrates how identity architecture, policy decisions, governance workflows, and risk signals can be turned into an interactive operational dashboard.
-
-> The prototype turns IdentityOS from a documented architecture into a visible identity operations experience.
+The project is designed to demonstrate IAM engineering, identity governance, workflow automation, and architecture-level thinking.
