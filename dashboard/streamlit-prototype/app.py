@@ -1994,14 +1994,21 @@ st.info(
 # ------------------------------------------------------------
 
 st.markdown("---")
-st.header("HR Identity Intake Portal")
+st.header("HR New Hire Onboarding Workflow")
 
 st.markdown(
     """
-    This section simulates the HR front door for IdentityOS. HR can submit new hire
-    identity details, and IdentityOS will evaluate workforce attributes to recommend
-    the correct access package, approval workflow, risk level, and provisioning action.
+    This module demonstrates how HR can submit a new hire into IdentityOS and how
+    IdentityOS evaluates workforce attributes to recommend access, assign risk,
+    determine approval routing, prepare provisioning, and retain audit evidence
+    across the Joiner lifecycle.
     """
+)
+
+st.success(
+    "Demo Story: HR hires a new employee. IdentityOS evaluates the employee's department, "
+    "job title, location, and employment type, then recommends access, approval routing, "
+    "provisioning actions, and governance evidence."
 )
 
 if "hr_identity_intake_queue" not in st.session_state:
@@ -2135,7 +2142,177 @@ if st.session_state.hr_identity_intake_queue:
     selected_intake = hr_intake_df[
         hr_intake_df["Intake ID"] == selected_intake_id
     ].iloc[0]
+    # ------------------------------------------------------------
+    # IdentityOS - New Hire Journey Visualization
+    # ------------------------------------------------------------
 
+    st.write("### IdentityOS New Hire Journey")
+
+    st.markdown(
+        """
+        This view shows the full Joiner story from the moment HR submits a new hire
+        through access recommendation, approval routing, provisioning preparation,
+        and audit evidence capture.
+        """
+    )
+
+    journey_profile_col, journey_decision_col = st.columns(2)
+
+    with journey_profile_col:
+        st.write("#### New Hire Profile")
+
+        new_hire_profile = pd.DataFrame(
+            [
+                {"Attribute": "New Hire", "Value": selected_intake.get("New Hire Name", "Unknown")},
+                {"Attribute": "Department", "Value": selected_intake.get("Department", "Unknown")},
+                {"Attribute": "Job Title", "Value": selected_intake.get("Job Title", "Unknown")},
+                {"Attribute": "Location", "Value": selected_intake.get("Location", "Unknown")},
+                {"Attribute": "Employment Type", "Value": selected_intake.get("Employment Type", "Unknown")},
+                {"Attribute": "Start Date", "Value": selected_intake.get("Start Date", "Unknown")},
+                {"Attribute": "Intake Status", "Value": selected_intake.get("Intake Status", "Unknown")},
+            ]
+        )
+
+        st.dataframe(new_hire_profile, use_container_width=True)
+
+    with journey_decision_col:
+        st.write("#### IdentityOS Decision")
+
+        selected_risk_level = selected_intake.get("Risk Level", "Unknown")
+
+        if selected_risk_level == "High":
+            st.error(f"Risk Level: {selected_risk_level}")
+        elif selected_risk_level == "Medium":
+            st.warning(f"Risk Level: {selected_risk_level}")
+        elif selected_risk_level == "Low":
+            st.success(f"Risk Level: {selected_risk_level}")
+        else:
+            st.info(f"Risk Level: {selected_risk_level}")
+
+        st.markdown(f"**Recommended Access Package:** {selected_intake.get('Recommended Access Package', 'Unknown')}")
+        st.markdown(f"**Approval Workflow:** {selected_intake.get('Approval Workflow', 'Unknown')}")
+        st.markdown(f"**Provisioning Action:** {selected_intake.get('Provisioning Action', 'Unknown')}")
+        st.markdown(f"**Ticket Created:** {selected_intake.get('Ticket Created', 'No')}")
+
+    st.write("#### Why IdentityOS Recommended This Access")
+
+    st.info(
+        f"Because {selected_intake.get('New Hire Name', 'this employee')} is joining as a "
+        f"{selected_intake.get('Job Title', 'new employee')} in the "
+        f"{selected_intake.get('Department', 'assigned')} department, IdentityOS matched the new hire "
+        f"to the {selected_intake.get('Recommended Access Package', 'recommended')} package. "
+        f"The approval path is {selected_intake.get('Approval Workflow', 'assigned approval workflow')} "
+        f"and the risk level is {selected_intake.get('Risk Level', 'unknown')}."
+    )
+
+    st.write("#### Joiner Lifecycle Timeline")
+
+    approval_ticket_status = (
+        "Approval ticket created"
+        if selected_intake.get("Ticket Created", "No") == "Yes"
+        else "Awaiting approval ticket creation"
+    )
+
+    new_hire_timeline = [
+        {
+            "Step": 1,
+            "Lifecycle Stage": "HR Intake Submitted",
+            "What Happens": "HR enters the new hire's workforce identity attributes.",
+            "IdentityOS Status": selected_intake.get("Intake Status", "Submitted")
+        },
+        {
+            "Step": 2,
+            "Lifecycle Stage": "Identity Attributes Evaluated",
+            "What Happens": "IdentityOS evaluates department, job title, location, and employment type.",
+            "IdentityOS Status": "Evaluation Complete"
+        },
+        {
+            "Step": 3,
+            "Lifecycle Stage": "Access Package Recommended",
+            "What Happens": f"IdentityOS recommends {selected_intake.get('Recommended Access Package', 'an access package')}.",
+            "IdentityOS Status": "Access Recommendation Ready"
+        },
+        {
+            "Step": 4,
+            "Lifecycle Stage": "Approval Routing Assigned",
+            "What Happens": f"Approval is routed to {selected_intake.get('Approval Workflow', 'the correct approver')}.",
+            "IdentityOS Status": "Approval Path Identified"
+        },
+        {
+            "Step": 5,
+            "Lifecycle Stage": "Approval Ticket",
+            "What Happens": "IdentityOS creates a workflow ticket for approval and tracking.",
+            "IdentityOS Status": approval_ticket_status
+        },
+        {
+            "Step": 6,
+            "Lifecycle Stage": "Provisioning Preparation",
+            "What Happens": "IdentityOS prepares the required account, group, and access actions.",
+            "IdentityOS Status": "Ready for Approval / Provisioning Workflow"
+        },
+        {
+            "Step": 7,
+            "Lifecycle Stage": "Audit Evidence",
+            "What Happens": "IdentityOS retains the intake, recommendation, approval path, and provisioning action as evidence.",
+            "IdentityOS Status": "Evidence Captured"
+        }
+    ]
+
+    new_hire_timeline_df = pd.DataFrame(new_hire_timeline)
+    st.dataframe(new_hire_timeline_df, use_container_width=True)
+
+    st.write("#### Manual Process vs IdentityOS Process")
+
+    process_comparison = pd.DataFrame(
+        [
+            {
+                "Process Area": "New Hire Request",
+                "Manual Process": "HR emails IT or submits an incomplete ticket.",
+                "IdentityOS Process": "HR submits a structured identity intake."
+            },
+            {
+                "Process Area": "Access Decision",
+                "Manual Process": "Access may be guessed or copied from another user.",
+                "IdentityOS Process": "Access is recommended from department and job title policy logic."
+            },
+            {
+                "Process Area": "Approval Routing",
+                "Manual Process": "Approver may be unclear or handled outside the system.",
+                "IdentityOS Process": "Approval workflow is assigned automatically."
+            },
+            {
+                "Process Area": "Provisioning",
+                "Manual Process": "IT manually creates accounts and assigns groups.",
+                "IdentityOS Process": "Provisioning action is prepared and tracked."
+            },
+            {
+                "Process Area": "Audit Evidence",
+                "Manual Process": "Evidence may be scattered across email, tickets, and spreadsheets.",
+                "IdentityOS Process": "Intake, recommendation, approval, and provisioning evidence are retained."
+            }
+        ]
+    )
+
+    st.dataframe(process_comparison, use_container_width=True)
+
+    st.write("#### Audit Evidence Preview")
+
+    audit_evidence_preview = pd.DataFrame(
+        [
+            {"Evidence Item": "HR Intake Record", "Status": "Captured"},
+            {"Evidence Item": "Workforce Attributes", "Status": "Captured"},
+            {"Evidence Item": "Access Recommendation", "Status": "Captured"},
+            {"Evidence Item": "Risk Level", "Status": "Captured"},
+            {"Evidence Item": "Approval Workflow", "Status": "Captured"},
+            {
+                "Evidence Item": "Approval Ticket",
+                "Status": "Created" if selected_intake.get("Ticket Created", "No") == "Yes" else "Pending"
+            },
+            {"Evidence Item": "Provisioning Action", "Status": "Prepared"},
+        ]
+    )
+
+    st.dataframe(audit_evidence_preview, use_container_width=True)
     selected_intake_col1, selected_intake_col2, selected_intake_col3 = st.columns(3)
 
     with selected_intake_col1:
