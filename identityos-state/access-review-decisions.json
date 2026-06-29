@@ -1,0 +1,30 @@
+[
+    {
+        "Decision ID": "ARD-20260629110401-1",
+        "Timestamp": "2026-06-29 11:04:01",
+        "Campaign ID": "ARC-20260629110355-1",
+        "Campaign Name": "Quarterly Identity Access Review",
+        "Employee": "Alicia Brown",
+        "Lifecycle Stage": "Joiner",
+        "Access Package / Control": "HR Core Access",
+        "Risk Level": "Low",
+        "Reviewer": "HR Manager",
+        "Review Decision": "Approve / Retain Access",
+        "Review Notes": "Access reviewed as part of IdentityOS campaign simulation.",
+        "Decision Source": "IdentityOS Access Review Campaign Center"
+    },
+    {
+        "Decision ID": "ARD-20260629110441-2",
+        "Timestamp": "2026-06-29 11:04:41",
+        "Campaign ID": "ARC-20260629110355-1",
+        "Campaign Name": "Quarterly Identity Access Review",
+        "Employee": "Alicia Brown",
+        "Lifecycle Stage": "Joiner",
+        "Access Package / Control": "HR Core Access",
+        "Risk Level": "Low",
+        "Reviewer": "HR Manager",
+        "Review Decision": "Approve / Retain Access",
+        "Review Notes": "Access reviewed as part of IdentityOS campaign simulation.",
+        "Decision Source": "IdentityOS Access Review Campaign Center"
+    }
+]

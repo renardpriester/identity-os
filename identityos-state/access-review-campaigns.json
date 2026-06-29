@@ -1,0 +1,49 @@
+[
+    {
+        "Campaign ID": "ARC-20260629110355-1",
+        "Created": "2026-06-29 11:03:55",
+        "Campaign Name": "Quarterly Identity Access Review",
+        "Campaign Scope": "All Access",
+        "Campaign Owner": "IAM Governance",
+        "Review Due Date": "2026-06-29",
+        "Candidate Count": 3,
+        "High Risk Candidates": 1,
+        "Campaign Status": "In Progress",
+        "Review Items": [
+            {
+                "Source": "Sample Review Population",
+                "Employee": "Alicia Brown",
+                "Lifecycle Stage": "Joiner",
+                "Access Package / Control": "HR Core Access",
+                "Risk Level": "Low",
+                "Current Status": "Provisioned",
+                "Reviewer": "HR Manager",
+                "Review Reason": "Quarterly access certification sample",
+                "Recommended Review Action": "Manager validation recommended"
+            },
+            {
+                "Source": "Sample Review Population",
+                "Employee": "Marcus Lee",
+                "Lifecycle Stage": "Joiner",
+                "Access Package / Control": "Finance Core Access",
+                "Risk Level": "Medium",
+                "Current Status": "Provisioned",
+                "Reviewer": "Finance Manager",
+                "Review Reason": "Quarterly finance access review sample",
+                "Recommended Review Action": "Validate business need"
+            },
+            {
+                "Source": "Sample Review Population",
+                "Employee": "Executive Admin",
+                "Lifecycle Stage": "Joiner",
+                "Access Package / Control": "Executive Support Access",
+                "Risk Level": "High",
+                "Current Status": "Provisioned",
+                "Reviewer": "Executive Leadership + Security",
+                "Review Reason": "High-value user access requires enhanced review",
+                "Recommended Review Action": "Security review required"
+            }
+        ],
+        "Decision Source": "IdentityOS Access Review Campaign Center"
+    }
+]

@@ -10,5 +10,11 @@
         "Event Type": "Load",
         "Event Details": "IdentityOS workflow state reloaded from local JSON files.",
         "Decision Source": "IdentityOS Data Persistence Layer"
+    },
+    {
+        "Timestamp": "2026-06-29 11:27:41",
+        "Event Type": "Save",
+        "Event Details": "IdentityOS workflow state saved to local JSON files.",
+        "Decision Source": "IdentityOS Data Persistence Layer"
     }
 ]

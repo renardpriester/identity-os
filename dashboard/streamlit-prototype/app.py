@@ -112,6 +112,44 @@ def record_persistence_event(event_type, event_details):
             "Decision Source": "IdentityOS Data Persistence Layer"
         }
     )
+def create_ticket_id():
+    approval_queue = st.session_state.get("approval_queue", [])
+    return f"IAM-{datetime.now().strftime('%Y%m%d%H%M%S')}-{len(approval_queue) + 1}"
+
+
+def add_approval_ticket(
+    lifecycle_stage,
+    employee,
+    request_type,
+    access_package,
+    approval_owner,
+    risk_level,
+    recommended_action,
+):
+    if "approval_queue" not in st.session_state:
+        st.session_state.approval_queue = []
+
+    ticket = {
+        "Ticket ID": create_ticket_id(),
+        "Created": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "Lifecycle Stage": lifecycle_stage,
+        "Employee": employee,
+        "Request Type": request_type,
+        "Access Package / Control": access_package,
+        "Approval Owner": approval_owner,
+        "Risk Level": risk_level,
+        "Recommended Action": recommended_action,
+        "Ticket Status": "Pending Approval",
+        "Provisioning Status": "Not Started",
+        "Decision Source": "IdentityOS Workflow Engine"
+    }
+
+    st.session_state.approval_queue.append(ticket)
+
+
+if "identityos_state_loaded_from_disk" not in st.session_state:
+    load_identityos_state_from_disk()
+    st.session_state.identityos_state_loaded_from_disk = True
 def clean_label(value: str) -> str:
     """Convert snake_case keys into readable dashboard labels."""
     return value.replace("_", " ").title()
@@ -2875,217 +2913,7 @@ st.info(
     "environment, this layer could be replaced with a database such as PostgreSQL, Azure SQL, "
     "Cosmos DB, or another enterprise data store."
 )
-# ------------------------------------------------------------
-# IdentityOS - Reporting and Evidence Export Center
-# ------------------------------------------------------------
 
-st.markdown("---")
-st.header("IdentityOS Reporting & Evidence Export Center")
-
-st.markdown(
-    """
-    This section allows IdentityOS workflow and governance records to be exported
-    for audit review, executive reporting, security investigations, and IAM
-    operational evidence.
-    """
-)
-
-reporting_hr_intakes = st.session_state.get("hr_identity_intake_queue", [])
-reporting_approval_queue = st.session_state.get("approval_queue", [])
-reporting_provisioning_history = st.session_state.get("provisioning_history", [])
-reporting_joiner_log = st.session_state.get("access_decision_audit_log", [])
-reporting_mover_log = st.session_state.get("mover_audit_log", [])
-reporting_leaver_log = st.session_state.get("leaver_audit_log", [])
-reporting_persistence_events = st.session_state.get("identityos_persistence_events", [])
-
-
-def records_to_dataframe(records):
-    if records:
-        return pd.DataFrame(records)
-
-    return pd.DataFrame()
-
-
-def dataframe_to_csv_download(df):
-    return df.to_csv(index=False).encode("utf-8")
-
-
-def records_to_json_download(records):
-    return json.dumps(records, indent=4).encode("utf-8")
-
-
-hr_report_df = records_to_dataframe(reporting_hr_intakes)
-approval_report_df = records_to_dataframe(reporting_approval_queue)
-provisioning_report_df = records_to_dataframe(reporting_provisioning_history)
-joiner_report_df = records_to_dataframe(reporting_joiner_log)
-mover_report_df = records_to_dataframe(reporting_mover_log)
-leaver_report_df = records_to_dataframe(reporting_leaver_log)
-persistence_report_df = records_to_dataframe(reporting_persistence_events)
-
-st.write("### Evidence Record Inventory")
-
-evidence_inventory = [
-    {
-        "Evidence Area": "HR Identity Intakes",
-        "Record Count": len(hr_report_df),
-        "Evidence Purpose": "New hire identity intake and attribute capture"
-    },
-    {
-        "Evidence Area": "Approval Queue",
-        "Record Count": len(approval_report_df),
-        "Evidence Purpose": "Approval ownership, ticket status, and provisioning readiness"
-    },
-    {
-        "Evidence Area": "Provisioning History",
-        "Record Count": len(provisioning_report_df),
-        "Evidence Purpose": "IAM execution results and provisioning evidence"
-    },
-    {
-        "Evidence Area": "Joiner Audit Log",
-        "Record Count": len(joiner_report_df),
-        "Evidence Purpose": "Access package recommendation evidence"
-    },
-    {
-        "Evidence Area": "Mover Audit Log",
-        "Record Count": len(mover_report_df),
-        "Evidence Purpose": "Access change and access creep prevention evidence"
-    },
-    {
-        "Evidence Area": "Leaver Audit Log",
-        "Record Count": len(leaver_report_df),
-        "Evidence Purpose": "Offboarding, access removal, and session revocation evidence"
-    },
-    {
-        "Evidence Area": "Persistence Events",
-        "Record Count": len(persistence_report_df),
-        "Evidence Purpose": "State save and reload activity"
-    }
-]
-
-evidence_inventory_df = pd.DataFrame(evidence_inventory)
-st.dataframe(evidence_inventory_df, use_container_width=True)
-
-evidence_metric_col1, evidence_metric_col2, evidence_metric_col3 = st.columns(3)
-
-with evidence_metric_col1:
-    total_evidence_records = evidence_inventory_df["Record Count"].sum()
-    st.metric("Total Evidence Records", int(total_evidence_records))
-
-with evidence_metric_col2:
-    populated_evidence_areas = evidence_inventory_df[
-        evidence_inventory_df["Record Count"] > 0
-    ].shape[0]
-    st.metric("Populated Evidence Areas", populated_evidence_areas)
-
-with evidence_metric_col3:
-    st.metric("Tracked Evidence Areas", len(evidence_inventory_df))
-
-st.write("### Download Evidence Reports")
-
-download_col1, download_col2, download_col3 = st.columns(3)
-
-with download_col1:
-    st.download_button(
-        label="Download HR Intakes CSV",
-        data=dataframe_to_csv_download(hr_report_df),
-        file_name="identityos-hr-intakes.csv",
-        mime="text/csv",
-        disabled=hr_report_df.empty
-    )
-
-    st.download_button(
-        label="Download Joiner Audit CSV",
-        data=dataframe_to_csv_download(joiner_report_df),
-        file_name="identityos-joiner-audit-log.csv",
-        mime="text/csv",
-        disabled=joiner_report_df.empty
-    )
-
-with download_col2:
-    st.download_button(
-        label="Download Approval Queue CSV",
-        data=dataframe_to_csv_download(approval_report_df),
-        file_name="identityos-approval-queue.csv",
-        mime="text/csv",
-        disabled=approval_report_df.empty
-    )
-
-    st.download_button(
-        label="Download Mover Audit CSV",
-        data=dataframe_to_csv_download(mover_report_df),
-        file_name="identityos-mover-audit-log.csv",
-        mime="text/csv",
-        disabled=mover_report_df.empty
-    )
-
-with download_col3:
-    st.download_button(
-        label="Download Provisioning History CSV",
-        data=dataframe_to_csv_download(provisioning_report_df),
-        file_name="identityos-provisioning-history.csv",
-        mime="text/csv",
-        disabled=provisioning_report_df.empty
-    )
-
-    st.download_button(
-        label="Download Leaver Audit CSV",
-        data=dataframe_to_csv_download(leaver_report_df),
-        file_name="identityos-leaver-audit-log.csv",
-        mime="text/csv",
-        disabled=leaver_report_df.empty
-    )
-
-st.write("### Executive Evidence Summary Export")
-
-executive_evidence_summary = {
-    "Generated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-    "Platform": "IdentityOS",
-    "Version": "v0.2",
-    "Summary": {
-        "Total Evidence Records": int(total_evidence_records),
-        "Populated Evidence Areas": int(populated_evidence_areas),
-        "Tracked Evidence Areas": int(len(evidence_inventory_df)),
-        "HR Intakes": int(len(hr_report_df)),
-        "Approval Tickets": int(len(approval_report_df)),
-        "Provisioning Records": int(len(provisioning_report_df)),
-        "Joiner Audit Records": int(len(joiner_report_df)),
-        "Mover Audit Records": int(len(mover_report_df)),
-        "Leaver Audit Records": int(len(leaver_report_df)),
-        "Persistence Events": int(len(persistence_report_df))
-    },
-    "Governance Interpretation": (
-        "IdentityOS maintains exportable evidence across HR intake, approval, "
-        "provisioning, Joiner, Mover, Leaver, and persistence workflows."
-    )
-}
-
-st.json(executive_evidence_summary)
-
-st.download_button(
-    label="Download Executive Evidence Summary JSON",
-    data=json.dumps(executive_evidence_summary, indent=4).encode("utf-8"),
-    file_name="identityos-executive-evidence-summary.json",
-    mime="application/json"
-)
-
-st.write("### Evidence Export Risk View")
-
-if not evidence_inventory_df.empty:
-    evidence_chart = px.bar(
-        evidence_inventory_df,
-        x="Evidence Area",
-        y="Record Count",
-        title="IdentityOS Evidence Records by Area"
-    )
-
-    st.plotly_chart(evidence_chart, use_container_width=True)
-
-st.info(
-    "Audit Readiness Note: The Reporting & Evidence Export Center allows IdentityOS "
-    "records to be exported for governance reviews, security investigations, compliance "
-    "evidence, and executive IAM reporting. In a production environment, these exports "
-    "could be scheduled, sent to secure storage, or integrated with GRC platforms."
-)
 # ------------------------------------------------------------
 # IdentityOS - Access Review Campaign Center
 # ------------------------------------------------------------
@@ -3341,7 +3169,7 @@ if st.button("Generate Access Review Campaign"):
     st.session_state.access_review_campaigns.append(campaign_record)
 
     st.success(f"Access review campaign created: {campaign_id}")
-
+   
 if st.session_state.access_review_campaigns:
     st.write("### Access Review Campaigns")
 
@@ -3502,4 +3330,305 @@ st.info(
     "business need, confirm offboarding completion, and provide evidence for auditors. "
     "In a production environment, IdentityOS could integrate this workflow with Entra ID "
     "Access Reviews, ServiceNow, GRC platforms, or manager certification workflows."
+)
+# ------------------------------------------------------------
+# IdentityOS - Reporting and Evidence Export Center
+# ------------------------------------------------------------
+
+st.markdown("---")
+st.header("IdentityOS Reporting & Evidence Export Center")
+
+st.markdown(
+    """
+    This section allows IdentityOS workflow and governance records to be exported
+    for audit review, executive reporting, security investigations, access reviews,
+    and IAM operational evidence.
+    """
+)
+
+reporting_hr_intakes = st.session_state.get("hr_identity_intake_queue", [])
+reporting_approval_queue = st.session_state.get("approval_queue", [])
+reporting_provisioning_history = st.session_state.get("provisioning_history", [])
+reporting_joiner_log = st.session_state.get("access_decision_audit_log", [])
+reporting_mover_log = st.session_state.get("mover_audit_log", [])
+reporting_leaver_log = st.session_state.get("leaver_audit_log", [])
+reporting_persistence_events = st.session_state.get("identityos_persistence_events", [])
+reporting_access_review_campaigns = st.session_state.get("access_review_campaigns", [])
+reporting_access_review_decisions = st.session_state.get("access_review_decisions", [])
+
+
+def records_to_dataframe(records):
+    if records:
+        return pd.DataFrame(records)
+
+    return pd.DataFrame()
+
+
+def dataframe_to_csv_download(df):
+    return df.to_csv(index=False).encode("utf-8")
+
+
+def records_to_json_download(records):
+    return json.dumps(records, indent=4).encode("utf-8")
+
+
+hr_report_df = records_to_dataframe(reporting_hr_intakes)
+approval_report_df = records_to_dataframe(reporting_approval_queue)
+provisioning_report_df = records_to_dataframe(reporting_provisioning_history)
+joiner_report_df = records_to_dataframe(reporting_joiner_log)
+mover_report_df = records_to_dataframe(reporting_mover_log)
+leaver_report_df = records_to_dataframe(reporting_leaver_log)
+persistence_report_df = records_to_dataframe(reporting_persistence_events)
+access_review_campaigns_df = records_to_dataframe(reporting_access_review_campaigns)
+access_review_decisions_df = records_to_dataframe(reporting_access_review_decisions)
+
+access_review_campaign_summary_records = []
+
+for campaign in reporting_access_review_campaigns:
+    access_review_campaign_summary_records.append(
+        {
+            "Campaign ID": campaign.get("Campaign ID"),
+            "Created": campaign.get("Created"),
+            "Campaign Name": campaign.get("Campaign Name"),
+            "Campaign Scope": campaign.get("Campaign Scope"),
+            "Campaign Owner": campaign.get("Campaign Owner"),
+            "Review Due Date": campaign.get("Review Due Date"),
+            "Candidate Count": campaign.get("Candidate Count"),
+            "High Risk Candidates": campaign.get("High Risk Candidates"),
+            "Campaign Status": campaign.get("Campaign Status"),
+            "Decision Source": campaign.get("Decision Source"),
+        }
+    )
+
+access_review_campaign_summary_df = records_to_dataframe(
+    access_review_campaign_summary_records
+)
+
+st.write("### Evidence Record Inventory")
+
+evidence_inventory = [
+    {
+        "Evidence Area": "HR Identity Intakes",
+        "Record Count": len(hr_report_df),
+        "Evidence Purpose": "New hire identity intake and workforce attribute capture"
+    },
+    {
+        "Evidence Area": "Approval Queue",
+        "Record Count": len(approval_report_df),
+        "Evidence Purpose": "Approval ownership, ticket status, and provisioning readiness"
+    },
+    {
+        "Evidence Area": "Provisioning History",
+        "Record Count": len(provisioning_report_df),
+        "Evidence Purpose": "IAM execution results and provisioning evidence"
+    },
+    {
+        "Evidence Area": "Joiner Audit Log",
+        "Record Count": len(joiner_report_df),
+        "Evidence Purpose": "Access package recommendation evidence"
+    },
+    {
+        "Evidence Area": "Mover Audit Log",
+        "Record Count": len(mover_report_df),
+        "Evidence Purpose": "Access change and access creep prevention evidence"
+    },
+    {
+        "Evidence Area": "Leaver Audit Log",
+        "Record Count": len(leaver_report_df),
+        "Evidence Purpose": "Offboarding, access removal, and session revocation evidence"
+    },
+    {
+        "Evidence Area": "Persistence Events",
+        "Record Count": len(persistence_report_df),
+        "Evidence Purpose": "State save and reload activity"
+    },
+    {
+        "Evidence Area": "Access Review Campaigns",
+        "Record Count": len(access_review_campaign_summary_df),
+        "Evidence Purpose": "Access certification campaign scope, ownership, due dates, and status"
+    },
+    {
+        "Evidence Area": "Access Review Decisions",
+        "Record Count": len(access_review_decisions_df),
+        "Evidence Purpose": "Reviewer decisions, revocations, escalations, and certification evidence"
+    }
+]
+
+evidence_inventory_df = pd.DataFrame(evidence_inventory)
+st.dataframe(evidence_inventory_df, use_container_width=True)
+
+evidence_metric_col1, evidence_metric_col2, evidence_metric_col3 = st.columns(3)
+
+with evidence_metric_col1:
+    total_evidence_records = evidence_inventory_df["Record Count"].sum()
+    st.metric("Total Evidence Records", int(total_evidence_records))
+
+with evidence_metric_col2:
+    populated_evidence_areas = evidence_inventory_df[
+        evidence_inventory_df["Record Count"] > 0
+    ].shape[0]
+    st.metric("Populated Evidence Areas", populated_evidence_areas)
+
+with evidence_metric_col3:
+    st.metric("Tracked Evidence Areas", len(evidence_inventory_df))
+
+st.write("### Download Lifecycle Evidence Reports")
+
+download_col1, download_col2, download_col3 = st.columns(3)
+
+with download_col1:
+    st.download_button(
+        label="Download HR Intakes CSV",
+        data=dataframe_to_csv_download(hr_report_df),
+        file_name="identityos-hr-intakes.csv",
+        mime="text/csv",
+        disabled=hr_report_df.empty
+    )
+
+    st.download_button(
+        label="Download Joiner Audit CSV",
+        data=dataframe_to_csv_download(joiner_report_df),
+        file_name="identityos-joiner-audit-log.csv",
+        mime="text/csv",
+        disabled=joiner_report_df.empty
+    )
+
+with download_col2:
+    st.download_button(
+        label="Download Approval Queue CSV",
+        data=dataframe_to_csv_download(approval_report_df),
+        file_name="identityos-approval-queue.csv",
+        mime="text/csv",
+        disabled=approval_report_df.empty
+    )
+
+    st.download_button(
+        label="Download Mover Audit CSV",
+        data=dataframe_to_csv_download(mover_report_df),
+        file_name="identityos-mover-audit-log.csv",
+        mime="text/csv",
+        disabled=mover_report_df.empty
+    )
+
+with download_col3:
+    st.download_button(
+        label="Download Provisioning History CSV",
+        data=dataframe_to_csv_download(provisioning_report_df),
+        file_name="identityos-provisioning-history.csv",
+        mime="text/csv",
+        disabled=provisioning_report_df.empty
+    )
+
+    st.download_button(
+        label="Download Leaver Audit CSV",
+        data=dataframe_to_csv_download(leaver_report_df),
+        file_name="identityos-leaver-audit-log.csv",
+        mime="text/csv",
+        disabled=leaver_report_df.empty
+    )
+
+st.write("### Download Access Review Evidence")
+
+review_download_col1, review_download_col2, review_download_col3 = st.columns(3)
+
+with review_download_col1:
+    st.download_button(
+        label="Download Access Review Campaigns CSV",
+        data=dataframe_to_csv_download(access_review_campaign_summary_df),
+        file_name="identityos-access-review-campaigns.csv",
+        mime="text/csv",
+        disabled=access_review_campaign_summary_df.empty
+    )
+
+with review_download_col2:
+    st.download_button(
+        label="Download Access Review Decisions CSV",
+        data=dataframe_to_csv_download(access_review_decisions_df),
+        file_name="identityos-access-review-decisions.csv",
+        mime="text/csv",
+        disabled=access_review_decisions_df.empty
+    )
+
+with review_download_col3:
+    st.download_button(
+        label="Download Full Access Review Evidence JSON",
+        data=records_to_json_download(reporting_access_review_campaigns),
+        file_name="identityos-full-access-review-evidence.json",
+        mime="application/json",
+        disabled=not reporting_access_review_campaigns
+    )
+
+st.write("### Executive Evidence Summary Export")
+
+executive_evidence_summary = {
+    "Generated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    "Platform": "IdentityOS",
+    "Version": "v0.2",
+    "Summary": {
+        "Total Evidence Records": int(total_evidence_records),
+        "Populated Evidence Areas": int(populated_evidence_areas),
+        "Tracked Evidence Areas": int(len(evidence_inventory_df)),
+        "HR Intakes": int(len(hr_report_df)),
+        "Approval Tickets": int(len(approval_report_df)),
+        "Provisioning Records": int(len(provisioning_report_df)),
+        "Joiner Audit Records": int(len(joiner_report_df)),
+        "Mover Audit Records": int(len(mover_report_df)),
+        "Leaver Audit Records": int(len(leaver_report_df)),
+        "Persistence Events": int(len(persistence_report_df)),
+        "Access Review Campaigns": int(len(access_review_campaign_summary_df)),
+        "Access Review Decisions": int(len(access_review_decisions_df)),
+    },
+    "Governance Interpretation": (
+        "IdentityOS maintains exportable evidence across HR intake, approval, "
+        "provisioning, Joiner, Mover, Leaver, persistence, access review campaigns, "
+        "and access review decisions."
+    )
+}
+
+st.json(executive_evidence_summary)
+
+st.download_button(
+    label="Download Executive Evidence Summary JSON",
+    data=json.dumps(executive_evidence_summary, indent=4).encode("utf-8"),
+    file_name="identityos-executive-evidence-summary.json",
+    mime="application/json"
+)
+
+st.write("### Evidence Export Risk View")
+
+evidence_chart = px.bar(
+    evidence_inventory_df,
+    x="Evidence Area",
+    y="Record Count",
+    title="IdentityOS Evidence Records by Area"
+)
+
+st.plotly_chart(evidence_chart, use_container_width=True)
+
+if not access_review_decisions_df.empty:
+    st.write("### Access Review Decision Export Summary")
+
+    access_review_decision_summary = (
+        access_review_decisions_df.groupby("Review Decision")
+        .size()
+        .reset_index(name="Decision Count")
+    )
+
+    st.dataframe(access_review_decision_summary, use_container_width=True)
+
+    access_review_decision_chart = px.bar(
+        access_review_decision_summary,
+        x="Review Decision",
+        y="Decision Count",
+        title="Access Review Decisions Available for Export"
+    )
+
+    st.plotly_chart(access_review_decision_chart, use_container_width=True)
+
+st.info(
+    "Audit Readiness Note: The Reporting & Evidence Export Center allows IdentityOS "
+    "records to be exported for governance reviews, security investigations, compliance "
+    "evidence, executive IAM reporting, and access certification programs. In a production "
+    "environment, these exports could be scheduled, sent to secure storage, or integrated "
+    "with GRC platforms."
 )
